@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance System</title>
+    <link rel="stylesheet" href="../src/input.css">
+    <link rel="stylesheet" href="../src/output.css">
+    <link rel="stylesheet" href="../styles/adminCss.css">
+    <script src="https://kit.fontawesome.com/a9bed58581.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rubik+Wet+Paint&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="page flex h-auto max-sm:min-h-[100vh]  ">
+
+        <!--
+            color :
+
+            
+        HEX Color	    Usage
+        #0d1b2a     	Primary Background (Main body, navbar, sidebar)
+        #1b263b	        Secondary Background (Cards, sections, hover states)
+        #415a77	        Accent Elements (Buttons, active links, highlights)
+        #778da9	- #8e9baa Text & Borders (Subtext, less important elements)
+        #e0e1dd	        Primary Text (Headings, main text for contrast)
+        flex-grow
+        -->
+
+
+        <!-- NavBar -->
+
+        <aside id="admin-sidebar"
+            class="w-80   text-white p-4  bg-[#0d1b2a] overflow-y-auto transition-all duration-700  ">
+            <!-- Sidebar content will be inserted here -->
+
+        </aside>
+
+        <div class="flex flex-col  flex-grow min-h-screen h-auto justify-between section" id="header-main-footer">
+
+            <!-- Header Section-->
+
+            <header id="admin-header" class="bg-[#1b263b] text-white p-4 shadow-md flex justify-between items-center ">
+
+            </header>
+
+            <!-- Main Section -->
+
+            <main id="admin-main" class="bg-[#e0e1dd] max-sm:min-h-[100vh] h-auto  flex-1  " >
+                <section id="take-attendance" class="content-section h-full"></section>
+                <section id="student_list" class="content-section hidden h-full"></section>
+                <section id="add_Student" class="content-section hidden h-full"></section>
+                <section id="add_Teacher" class="content-section hidden h-full"></section>
+                <section id="Teacher_list" class="content-section hidden h-full"></section>
+                <section id="class_List" class="content-section hidden h-full"></section>
+                <section id="add_class" class="content-section hidden h-full"></section>
+                <section id="notice" class="content-section hidden h-full"></section>
+                <section id="notice_form" class="content-section hidden h-full"></section>
+                <section id="message" class="content-section hidden h-full"></section>
+                <section id="messageForm" class="content-section hidden h-full"></section>
+                <section id="profile" class="content-section hidden h-full"></section>
+                <section id="setting" class="content-section hidden h-full"></section>
+            </main>
+
+            <!-- Footer -->
+            
+            <footer id="admin-footer"
+                class="bg-[#1b263b] h-[4rem]  text-[#8e9baa] text-[1rem]  w-[100%] bottom-0 p-4 shadow-md flex justify-around items-center ">
+            </footer>
+        </div>
+    </div>
+</body>
+<script src="../components/admin-navbar.js" defer></script>
+<script src="../components/admin-header.js" defer></script>
+<!-- <script src="../components/admin-main.js" defer></script> -->
+<script src="../components/take-attendance.js" defer></script>
+<script src="../components/studentList.js" defer></script>
+<script src="../components/addStudent.js" defer></script>
+<script src="../components/addTeacher.js" defer></script>
+<script src="../components/profile.js" defer></script>
+<script src="../components/setting.js" defer></script>
+<script src="../components/classAdding.js" defer></script>
+<script src="../components/classList.js" defer></script>
+<script src="../components/studentList.js" defer></script>
+<script src="../components/noticeForm.js" defer></script>
+<script src="../components/noticeList.js" defer></script>
+<script src="../components/TeacherList.js" defer></script>
+<script src="../components/admin-footer.js" defer></script>
+<script src="../components/messageList.js" defer></script>
+<script src="../components/messageForm.js" defer></script>
+<script src="../js/dynamicPage.js" defer></script>
+<script src="../js/forToggle.js" defer></script>
+<script src="../js/forCalender.js" defer></script>
+<script src="../js/classSection.js" defer></script>
+
+</html>

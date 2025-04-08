@@ -1,0 +1,103 @@
+
+        {
+            "_id": "uuid-v4",
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "johndoe@example.com",
+            "mobilePhone": "+1234567890",
+            "parentsPhone": "+0987654321",
+            "address": {
+              "street": "123 Main St",
+              "addressLine2": "Apt 4B",
+              "city": "New York",
+              "state": "NY",
+              "zipCode": "10001"
+            },
+            "classAssigned": "Mathematics - Class A",
+            "bioNotes": "Excellent student"
+        },
+
+
+
+
+
+        {
+            "_id": "uuid-v4",
+            "firstName": "Jane",
+            "lastName": "Smith",
+            "email": "janesmith@example.com",
+            "mobilePhone": "+11234567890",
+            "officePhone": "+10987654321",
+            "subjects": ["Mathematics", "Physics"],
+            "customSubject": "Astronomy",
+            "address": {
+              "street": "456 Elm Street",
+              "addressLine2": "Suite 3A",
+              "city": "Los Angeles",
+              "state": "CA",
+              "zipCode": "90001"
+            },
+            "classAssigned": "Mathematics - Class A",
+            "bioNotes": "Experienced teacher ."
+        }
+
+ 
+  
+    {
+      "_id": "uuid-v4",
+      "class_name": "10th Grade - A",
+      "teacher_id": "uuid-v4",
+      "students": ["uuid-v4", "uuid-v4"], 
+      "created_at": "2025-03-08T12:00:00Z",
+      "updated_at": "2025-03-08T12:00:00Z"
+    }
+    
+
+    {
+      "_id": "uuid-v4",
+      "student_id": "uuid-v4",
+      "class_id": "uuid-v4",
+      "date": "2025-03-08",
+      "status": "Present",
+      "created_at": "2025-03-08T12:00:00Z",
+      "updated_at": "2025-03-08T12:00:00Z"
+    }
+
+
+
+    {
+      "firstName": "Michael",
+      "lastName": "Johnson",
+      "email": "michaeljohnson@example.com",
+      "mobilePhone": "+19876543210",
+      "officePhone": "+10987654321",
+      "role": "Administrator",
+      "address": {
+        "street": "789 Pine Avenue",
+        "addressLine2": "Building 5",
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601"
+      },
+      "bioNotes": "Senior administrator"
+    }
+
+
+
+    {
+      "leaveId": "LV123456",
+      "userId": "TCH789012",  
+      "userType": "Teacher",  
+      "name": "David Smith",
+      "email": "davidsmith@example.com",
+      "leaveType": "Sick Leave",
+      "startDate": "2025-03-10",
+      "endDate": "2025-03-12",
+      "reason": "Flu and fever, advised bed rest.",
+      "status": "Pending",  
+      "appliedAt": "2025-03-08T10:30:00Z",
+      "approvedBy": null
+    }
+    
+    
+  

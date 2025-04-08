@@ -1,0 +1,428 @@
+@import "tailwindcss";
+
+* {
+
+    box-sizing: border-box; 
+    font-family: "Exo 2", sans-serif;
+
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    transition: width 2s ease-in-out;
+    
+    /* Smooth transition when hovered */
+}
+
+/* Scrollbar Thumb (Draggable part) */
+::-webkit-scrollbar-thumb {
+    background: #415a77;
+    /* Dark Gray */
+    border-radius: 10px;
+    transition: background 2s ease-in-out;
+    /* Smooth color change */
+}
+
+/* Scrollbar Track (Background) */
+::-webkit-scrollbar-track {
+    background: #0d1b2a;
+    /* Sidebar Background */
+}
+
+/* Hover Effects */
+::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+    /* Lighter Gray */
+    width: 10px;
+    /* Increases width on hover */
+}
+
+.logoName{
+    font-family: "Rubik Wet Paint", system-ui;
+}
+
+.neon-button{
+    display: none;
+}
+
+@media screen and (max-width: 640px){
+    .page{
+        height: fit-content;
+        
+    }
+    #admin-main{
+        min-height: 100vh;
+    }
+    #admin-sidebar {
+        display: none;
+        width: 100%;
+        min-height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #0d1b2a;
+        z-index: 50;
+        transform: translateX(-100%); /* Hide sidebar by default */
+        transition: transform 0.5s ease-in-out;
+    }
+
+    #admin-sidebar.show {
+        display: block;
+        height: 100%;
+        transform: translateX(0);
+    }
+
+    .myMenu{
+        margin: 2rem;
+    }
+    #header-main-footer{
+        min-height: 100vh;
+    }
+    #attendance-section{
+        width: 100%; 
+    }
+    #calander{
+        width: 100%;
+    }
+    .neon-button {
+        position: relative;
+        display: block;
+        transition: box-shadow 0.3s, transform 0.2s ease-in-out;
+    }
+    
+    .neon-button:hover {
+        box-shadow: 0 0 10px #8e9baa, 0 0 20px #8e9baa, 0 0 30px #8e9baa;
+        transform: translateY(-5px) scale(1.05);
+    }
+    
+    .neon-button:active {
+        transform: scale(0.95);
+    }
+    #take-attendance{
+        margin-bottom: 6rem;
+    }  
+}
+
+.attendance-container {
+    background-color: #1b263b;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+}
+
+.header {
+    background-color: #0d1b2a;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #657a92;
+}
+
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-container {
+    position: relative;
+    min-width: 200px;
+}
+
+.dropdown-button {
+    background-color: #415a77;
+    color: #e0e1dd;
+    /* border: 1px solid #0d1b2a; */
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: large;
+}
+
+.dropdown-button:hover {
+    background-color: #384763;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #415a77;
+    border: 1px solid #0d1b2a;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    opacity: 0;
+}
+
+.dropdown-menu.active {
+    max-height: 300px;
+    opacity: 1;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #384763;
+}
+
+.date-selector {
+    display: flex;
+    align-items: center;
+
+}
+
+.date-picker {
+    background-color: #415a77;
+    color: #e0e1dd;
+    border: 1px solid #0d1b2a;
+    border-radius: 6px;
+    padding: 0.75rem;
+    cursor: pointer;
+    outline: none;
+    font-size: large;
+}
+
+.content {
+    padding: 1.5rem 2rem;
+    /* background-color: #415a77; */
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 1.5rem;
+    color: #e0e1dd;
+    font-size: large;
+    background-color: #415a774e;
+    border-radius: 8px;
+}
+
+.attendance-table th {
+    background-color: #415a77;
+    color: #e0e1dd;
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+}
+
+.attendance-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.attendance-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.attendance-table td {
+    padding: 1rem;
+    font-size: large;
+}
+
+.attendance-table tr:last-child td {
+    border-bottom: none;
+}
+
+.attendance-table tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+.attendance-table tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+.status-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.status-button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.present-button {
+    background-color: rgba(46, 125, 50, 0.2);
+    color: #66bb6a;
+    border-color: #2e7d32;
+}
+
+.present-button:hover {
+    background-color: rgba(46, 125, 50, 0.4);
+}
+
+.present-button.active {
+    background-color: #2e7d32;
+    color: white; 
+}
+
+.absent-button {
+    background-color: rgba(198, 40, 40, 0.2);
+    color: #ef5350;
+    border-color: #c62828;
+}
+
+.absent-button:hover {
+    background-color: rgba(198, 40, 40, 0.4);
+}
+
+.absent-button.active {
+    background-color: #c62828;
+    color: white;
+}
+
+.late-button {
+    background-color: rgba(255, 143, 0, 0.2);
+    color: #ffa726;
+    border-color: #ef6c00;
+}
+
+.late-button:hover {
+    background-color: rgba(255, 143, 0, 0.4);
+}
+
+.late-button.active {
+    background-color: #ef6c00;
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.action-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.save-button {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.save-button:hover {
+    background-color: #1b5e20;
+}
+
+.delete-button {
+    background-color: #c62828;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #b71c1c;
+}
+
+.search-bar {
+    position: relative;
+    margin-bottom: 1rem;
+    color: #0d1b2a;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border-radius: 6px;
+    border: 1px solid #2a4a7f;
+    background-color: #e0e1dd;
+    color: #0d1b2a;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: #4a6baf;
+    box-shadow: 0 0 0 3px rgba(74, 107, 175, 0.3);
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b88c9;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-present {
+    background-color: rgba(46, 125, 50, 0.2);
+    color: #66bb6a;
+    border: 1px solid #2e7d32;
+}
+
+.status-absent {
+    background-color: rgba(198, 40, 40, 0.2);
+    color: #ef5350;
+    border: 1px solid #c62828;
+}
+
+.status-late {
+    background-color: rgba(255, 143, 0, 0.2);
+    color: #ffa726;
+    border: 1px solid #ef6c00;
+}
+
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .status-buttons {
+        flex-direction: column;
+        font-size: 1.5rem;
+    }
+    .attendance-table tr{
+        font-size: 1.5rem;
+    }
+    .attendance-table td{
+        font-size: 1.5rem;
+    }
+    .dropdown-button {
+        font-size: 1.5rem;
+    }
+    .date-picker{
+        font-size: 1.5rem;
+    }
+}
