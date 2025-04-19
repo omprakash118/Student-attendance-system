@@ -23,6 +23,14 @@ teacherAdding.innerHTML = `
                     <label class="block text-gray-700 max-sm:mb-3.5">Last Name</label>
                     <input type="text" class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" placeholder="Last Name">
                   </div>
+                  <div>
+                      <label class="block text-gray-700 max-sm:mb-3.5">Username</label>
+                      <input type="text" class="w-full p-2 border max-sm:mb-4 border-gray-300 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" placeholder="Username">
+                  </div>
+                  <div>
+                    <label class="block text-gray-700 max-sm:mb-3.5">Password</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" placeholder="Password">
+                  </div>
                   <div class="md:col-span-2">
                       <label class="block text-gray-700 max-sm:mb-3.5">Subjects to Teach</label>
                       <select class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md bg-gray-200 focus:ring-2 focus:ring-[#415a77] focus:outline-none">

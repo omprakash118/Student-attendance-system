@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
 
-const { v4: uuidv4 } = require('uuid');
-
-
 // Address Sub Schemas
 const addressSchema = new mongoose.Schema({
     street: { type: String, required: true },
@@ -15,15 +12,51 @@ const addressSchema = new mongoose.Schema({
 
 // Stundent Schema 
 const studentSchema = new mongoose.Schema({
-    _id: { type: String, default: uuidv4 },
-    Firstname : { first : String , required : true },
-    Lastname : { type : String},
-    email : { type : String , required :true },
-    mobilePhone : { type : Number, required : true},
-    parentsPhone : { type : Number, required : true },
-    address : { type : addressSchema , required : true},
-    classAssigned : { type : String , required : true},
-    bioNotes: { type: String, default: '' },
+    Firstname : { 
+        first : String , 
+        required : true
+    },
+    Lastname : { 
+        type : String
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true, 
+        index: true
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        minlength: 6, 
+        select: false 
+    },
+    email : { 
+        type : String , 
+        required :true 
+    },
+    mobilePhone : { 
+        type : Number, 
+        required : true
+    },
+    parentsPhone : { 
+        type : Number, 
+        required : true 
+    },
+    address : { 
+        type : addressSchema , 
+        required : true
+    },
+    classAssigned : { 
+        type : String , 
+        required : true
+    },
+    bioNotes: { 
+        type: String, 
+        default: '' 
+    },
 }, {timestamps : true});
 
 
