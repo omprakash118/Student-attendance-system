@@ -15,7 +15,7 @@ const addressSchema = new mongoose.Schema({
 // Stundent Schema 
 const studentSchema = new mongoose.Schema({
     Firstname : { 
-        first : String , 
+        type : String , 
         required : true
     },
     Lastname : { 

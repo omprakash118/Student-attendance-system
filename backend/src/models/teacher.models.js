@@ -15,7 +15,7 @@ const addressSchema = new mongoose.Schema({
 // Teacher Schema 
 const teacherSchema = new mongoose.Schema({
     Firstname : { 
-        first : String , 
+        type : String , 
         required : true 
     },
     Lastname : { 
