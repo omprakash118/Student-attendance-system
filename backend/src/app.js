@@ -9,18 +9,20 @@ app.use(cors({
   credentials : true
 }));
 
-app.use(express.json({limit : "16kb"}));
-app.use(express.urlencoded({limit : "16kb", extended : true}));
+app.use(express.json({limit : "50kb"}));
+app.use(express.urlencoded({limit : "50kb", extended : true}));
 app.use(express.static('public'));
 app.use(cookieParser());
 
 
 const userRoutes = require('./routes/user.routes.js');
+const takeAttendanceRoutes = require('./routes/takeAttendance.routes.js');
 
 app.use('/api/user', userRoutes);
+app.use('/api/attendance', takeAttendanceRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
 
 module.exports = { app };

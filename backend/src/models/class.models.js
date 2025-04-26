@@ -9,5 +9,5 @@ const classes = new mongoose.Schema({
 } , { timestamps: true });
 
 
-const Class = mongoose.model('Class' , classes);
-module.exports = Class;
+const Classes = mongoose.model('Classes' , classes);
+module.exports = Classes;

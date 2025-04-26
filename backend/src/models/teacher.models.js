@@ -54,13 +54,14 @@ const teacherSchema = new mongoose.Schema({
         required : true
         
     },
-    coustomSubjects : { 
+    customSubjects : { 
         type : String , 
         required : true
         
     },
     address : { 
         type : addressSchema , 
+        // type : String ,
         required : true
         
     },

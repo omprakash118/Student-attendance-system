@@ -49,6 +49,7 @@ const studentSchema = new mongoose.Schema({
     },
     address : { 
         type : addressSchema , 
+        // type : String ,
         required : true
     },
     classAssigned : { 
@@ -65,10 +66,6 @@ const studentSchema = new mongoose.Schema({
     },
 }, {timestamps : true});
 
-
-
-
-
 // It is used to hash the password before saving it to the database
 // It is a middleware function that is called before saving the document to the database
 studentSchema.pre('save', async function(next) {
@@ -77,7 +74,6 @@ studentSchema.pre('save', async function(next) {
     this.password = await bycrypt.hash(this.password, 10);
     next();
 })
-
 
 // Use to check if the password is correct
 studentSchema.methods.isPasswordCorrect = async function(password){

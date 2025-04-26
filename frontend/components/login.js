@@ -19,6 +19,11 @@ login.innerHTML = `
 
                 <!-- Username field -->
                 <div>
+                    <input type="text" placeholder="Email"
+                        class="w-full rounded border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-[#415a77] focus:outline-none" />
+                </div>
+                <!-- Username field -->
+                <div>
                     <input type="text" placeholder="UserName"
                         class="w-full rounded border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-[#415a77] focus:outline-none" />
                 </div>
