@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bycrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // Address Sub Schemas
@@ -71,14 +71,16 @@ const studentSchema = new mongoose.Schema({
 studentSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
 
-    this.password = await bycrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 })
 
 // Use to check if the password is correct
-studentSchema.methods.isPasswordCorrect = async function(password){
-    return await bycrypt.compare(password, this.password);
-}
+studentSchema.methods.isPasswordCorrect = async function (password) {
+    console.log("password   : ", password);
+    console.log("this       : ", this.password);
+    return await bcrypt.compare(password, this.password); 
+};
 
 // Use to generate access JWT token for the user
 studentSchema.methods.generateAccessToken = function(){
@@ -88,10 +90,11 @@ studentSchema.methods.generateAccessToken = function(){
             username: this.username,
             email: this.email,
             Firstname: this.Firstname,
+            role: 'student'
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn : process.env.ACCESS_TOKEN_EXPIRY || '1d',
         }
     )
 }
@@ -105,7 +108,7 @@ studentSchema.methods.generateRefreshToken = function(){
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn : process.env.REFRESH_TOKEN_EXPIRY || '10d',
         }
     )
 }

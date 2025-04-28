@@ -83,6 +83,7 @@ adminSchema.methods.generateAccessToken = function(){
             username: this.username,
             email: this.email,
             Firstname: this.Firstname,
+            role: 'admin'
         },
         process.env.ACCESS_TOKEN_SECRET,
         {

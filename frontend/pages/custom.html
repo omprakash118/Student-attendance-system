@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance System</title>
+    <link rel="stylesheet" href="../src/input.css">
+    <link rel="stylesheet" href="../src/output.css">
+    <link rel="stylesheet" href="../styles/adminCss.css">
+    <script src="https://kit.fontawesome.com/a9bed58581.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rubik+Wet+Paint&display=swap"
+        rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+  <div class="w-full max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- Header -->
+    <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center">
+      <h2 class="text-white font-semibold text-lg">PERSONAL INFO</h2>
+      <div class="flex space-x-2">
+        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors">Delete</button>
+        <button class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-sm font-medium transition-colors">Archive</button>
+        <button class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-sm font-medium transition-colors">Edit Info</button>
+      </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="p-6 space-y-4">
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Created:</div>
+        <div class="text-gray-800">2025-02-22</div>
+      </div>
+      
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Status:</div>
+        <div>
+          <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Active</span>
+        </div>
+      </div>
+      
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Email:</div>
+        <div class="text-gray-800">
+          <a href="mailto:josh@gmai.com" class="text-blue-600 hover:underline">josh@gmai.com</a>
+        </div>
+      </div>
+      
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Home phone:</div>
+        <div class="text-gray-800">(549) 837-6129</div>
+      </div>
+      
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Mobile phone:</div>
+        <div class="flex items-center">
+          <span class="text-gray-800 mr-3">(784) 956-3829</span>
+          <button class="text-blue-600 hover:text-blue-700 flex items-center text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            Send SMS
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Address:</div>
+        <div class="text-gray-800">
+          talab gali<br>
+          udaipur, udaipur 313001
+        </div>
+      </div>
+      
+      <div class="flex border-b border-gray-100 pb-3">
+        <div class="w-32 text-gray-500 font-medium">Password:</div>
+        <div>
+          <a href="#" class="text-blue-600 hover:underline">Click here to change josh's password</a>
+        </div>
+      </div>
+      
+      <div class="flex">
+        <div class="w-32 text-gray-500 font-medium">Bio/Note:</div>
+        <div class="text-gray-400 italic">No information provided</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

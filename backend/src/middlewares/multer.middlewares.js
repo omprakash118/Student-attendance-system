@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
         const ext = path.extname(originalName);  // Get file extension
         const baseName = path.basename(originalName, ext); // Get file name without extension
 
-        cd(null, `${timestamp}-${baseName}${ext}`); // Save file with timestamp
+        cb(null, `${timestamp}-${baseName}${ext}`); // Save file with timestamp
     }
 });
 

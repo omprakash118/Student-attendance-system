@@ -1,11 +1,12 @@
 const asyncHandler = require("../utils/asyncHandler.js");
 const ApiError = require("../utils/ApiError.js");
+const Admin = require("../models/admin.model.js");
 const Teacher = require("../models/teacher.models.js");
 const Student = require("../models/student.models.js");
 const ApiResponse = require("../utils/ApiResponse.js");
-const { generateAdminTokens } = require('../utils/adminTokens');
-const { generateTeacherTokens } = require('../utils/teacherTokens');
-const { generateStudentTokens } = require('../utils/studentTokens');
+const { generateAdminTokens } = require('../utils/adminToken.js');
+const { generateTeacherTokens } = require('../utils/teacherToken.js');
+const { generateStudentTokens } = require('../utils/studentToken.js');
 
 // It for register user
 const registerUser = asyncHandler(async (req, res) => {
@@ -157,6 +158,8 @@ const registerStudent = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, username, password, role } = req.body;
 
+    console.log("login user", req.body);
+
     if (!username && !email) {
         throw new ApiError(400, "username or email is required");
     }
@@ -172,16 +175,21 @@ const loginUser = asyncHandler(async (req, res) => {
     else if (role === "student") Model = Student;
     else throw new ApiError(400, "Invalid role provided");
 
+    console.log("Model", Model);
+
     const user = await Model.findOne({
         $or: [{ username }, { email }]
-    });
+    }).select("+password");
 
     if (!user) {
         throw new ApiError(404, "User does not exist");
     }
 
+    // const isPasswordValid = await user.isPasswordCorrect(password);
+
     const isPasswordValid = await user.isPasswordCorrect(password);
 
+    console.log("isPasswordValid", isPasswordValid);
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid user credentials");
     }
@@ -221,7 +229,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 // It for logout user
 const logoutUser = asyncHandler(async (req, res) => {
-    const { role } = req.user;
+    const { role } = req.body;
 
     let Model;
     if (role === "admin") Model = Admin;
@@ -254,11 +262,176 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 
+// It for refresh access token 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
+    if (!incomingRefreshToken) {
+        throw new ApiError(401, "Unauthorized request");
+    }
+
+    try {
+        // Verify the refresh token
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        );
+
+        let Model;
+        let generateTokens;
+        
+        if (decodedToken.role === 'admin') {
+            Model = Admin;
+            generateTokens = generateAdminTokens;
+        } else if (decodedToken.role === 'teacher') {
+            Model = Teacher;
+            generateTokens = generateTeacherTokens;
+        } else if (decodedToken.role === 'student') {
+            Model = Student;
+            generateTokens = generateStudentTokens;
+        } else {
+            throw new ApiError(401, "Invalid user role");
+        }
+
+        const user = await Model.findById(decodedToken?._id);
+
+        if (!user) {
+            throw new ApiError(401, "Invalid refresh token");
+        }
+
+        // Check if the refresh token matches
+        if (incomingRefreshToken !== user?.refreshToken) {
+            throw new ApiError(401, "Refresh token is expired or used");
+        }
+
+        // Generate new access and refresh tokens using the appropriate function
+        const { accessToken, refreshToken } = await generateTokens(user._id);
+
+        // Save the new refresh token in the user record
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        // Options for secure cookies
+        const options = {
+            httpOnly: true,
+            secure: true, // only set to true in production (when using HTTPS)
+        };
+
+        // Send the new tokens as cookies in the response
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json({
+                success: true,
+                accessToken,
+                refreshToken,
+                message: "Access token refreshed successfully"
+            });
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Invalid refresh token");
+    }
+});
+
+// It for change current password
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    // Dynamically choose the correct model based on the role
+    let Model;
+    if (req.user.role === 'admin') Model = Admin;
+    else if (req.user.role === 'teacher') Model = Teacher;
+    else if (req.user.role === 'student') Model = Student;
+    else {
+        throw new ApiError(400, "Invalid role");
+    }
+
+    const user = await Model.findById(req.user._id);
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Check if the old password is correct
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+
+    if (!isPasswordCorrect) {
+        throw new ApiError(400, "Invalid old password");
+    }
+
+    // Set the new password
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });
+
+    // Return success response
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Password changed successfully"));
+});
+
+
+// It for get current user
+const getCurrentUser = asyncHandler(async (req, res) => {
+    let Model;
+
+    // Dynamically choose the correct model based on the role
+    if (req.user.role === 'admin') {
+        Model = Admin;
+    } else if (req.user.role === 'teacher') {
+        Model = Teacher;
+    } else if (req.user.role === 'student') {
+        Model = Student;
+    } else {
+        throw new ApiError(400, "Invalid role");
+    }
+
+    // Find the current user from the database based on their ID
+    const user = await Model.findById(req.user._id).select('-password -refreshToken'); // Exclude password and refreshToken
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Return the user data
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "User fetched successfully"));
+});
+
+// It for update account details
+const updateAccountDetails = asyncHandler(async(req, res) => {
+    const {fullName, email} = req.body
+
+    if (!fullName || !email) {
+        throw new ApiError(400, "All fields are required")
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                fullName,
+                email: email
+            }
+        },
+        {new: true}
+        
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Account details updated successfully"))
+});
+
 
 module.exports = {
   registerUser,
   registerTeacher,
   registerStudent,
-    loginUser,
-    logoutUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails
 };

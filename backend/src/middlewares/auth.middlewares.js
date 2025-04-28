@@ -1,11 +1,11 @@
-import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import jwt from "jsonwebtoken";
-import { Admin } from "../models/admin.model.js";
-import { Teacher } from "../models/teacher.model.js";
-import { Student } from "../models/student.model.js";
-
-export const verifyJWT = asyncHandler(async (req, _, next) => {
+const ApiError = require('../utils/ApiError.js');
+const asyncHandler = require("../utils/asyncHandler.js");
+const jwt = require("jsonwebtoken");
+const Admin = require('../models/admin.model.js');
+const Teacher = require("../models/teacher.models.js");
+const Student = require("../models/student.models.js");
+ 
+const verifyJWT = asyncHandler(async (req, _, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
 
@@ -14,7 +14,10 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
         }
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
+        // console.log("decodedToken : ", decodedToken);
+        // console.log("req.cookies : ", req.cookies);
+        // console.log("req.header : ", req.header("Authorization"));
+        // console.log('req.cookies.accessToken : ', decodedToken.role);
         let Model;
         if (decodedToken.role === "admin") Model = Admin;
         else if (decodedToken.role === "teacher") Model = Teacher;
@@ -37,3 +40,6 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
         throw new ApiError(401, error?.message || "Invalid access token");
     }
 });
+
+
+module.exports = verifyJWT;

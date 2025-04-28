@@ -1,5 +1,5 @@
 const Student = require('../models/student.models.js');
-const ApiError = require('../utils/ApiError.js');
+const ApiError = require('./ApiError.js');
 
 const generateStudentTokens = async (studentId) => {
     try {
@@ -16,7 +16,9 @@ const generateStudentTokens = async (studentId) => {
 
         return { accessToken, refreshToken };
     } catch (error) {
+        console.error("Error generating student tokens:", error);
         throw new ApiError(500, "Something went wrong while generating student tokens");
+        
     }
 };
 

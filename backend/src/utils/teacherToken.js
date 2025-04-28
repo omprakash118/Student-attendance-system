@@ -1,5 +1,5 @@
 const Teacher = require('../models/teacher.models.js');
-const ApiError = require('../utils/ApiError.js');
+const ApiError = require('./ApiError.js');
 
 const generateTeacherTokens = async (teacherId) => {
     try {
