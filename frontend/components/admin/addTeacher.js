@@ -1,5 +1,6 @@
 const teacherAdding = document.getElementById('add_Teacher');
 
+
 teacherAdding.innerHTML = `
 <div class="titel h-[7rem] bg-[#e0e1dd] shadow-lg ">
         <div class="title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold  ">

@@ -10,7 +10,7 @@ classList.innerHTML = `
         <div class="w-[70%] max-sm:w-full max-sm:text-2xl mx-auto bg-gray-200 shadow-md rounded-lg p-6">
             <!-- Buttons and Search -->
             <div class="mb-4 flex items-center justify-between ">
-                <button class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 max-sm:mb-3 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">Add Class</button>
+                <button class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 max-sm:mb-3 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77] nav-link" data-target = "add_class" >Add Class</button>
                 <input type="text" placeholder="Search..." class="w-1/4 max-sm:w-[60%] max-sm:mb-3 rounded-md border p-2 pt-1.5 pb-1.5 pl-5 text-[1rem] max-sm:text-xl font-bold text-[#0d1b2a]" />
             </div>
 

@@ -10,8 +10,7 @@ TeacherList.innerHTML = `
       <div class="w-full max-w-4xl rounded-lg bg-gray-200 p-6 shadow-md ">
         <div class="mb-4 flex items-center justify-between">
           <div class="space-x-2">
-            <button class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">Add Teacher</button>
-            <button class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">View Archived</button>
+            <button id="addTeacherBTN" class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77] nav-link" data-target = "add_Teacher">Add Teacher</button>
           </div>
           <input type="text" placeholder="Search..." class="w-1/4 rounded-md border p-2 pt-1.5 pb-1.5 pl-5 text-[1rem] font-bold text-[#0d1b2a]" />
         </div>
@@ -115,3 +114,15 @@ TeacherList.innerHTML = `
 `;
 
 //  class="bg-gray-100 flex items-center justify-center min-h-screen"
+
+
+// const addTeacherBTN = document.getElementById("addTeacherBTN");
+
+// addTeacherBTN.addEventListener("click", () => {
+//   const newForm = document.createElement('div');
+
+//   newForm.innerHTML = `
+//     <div id="add_teacher"> </div>
+
+//   `
+// });
