@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student</title>
+    <link rel="stylesheet" href="../src/input.css">
+    <link rel="stylesheet" href="../src/output.css">
+    <link rel="stylesheet" href="../styles/adminCss.css">
+    <script src="https://kit.fontawesome.com/a9bed58581.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rubik+Wet+Paint&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="page flex h-auto max-sm:min-h-[100vh]  ">
+
+        <aside id="student-sidebar"
+            class="w-80   text-white p-4  bg-[#0d1b2a] overflow-y-auto transition-all duration-700  ">
+            <!-- Sidebar content will be inserted here -->
+
+        </aside>
+
+        <div class="flex flex-col  flex-grow min-h-screen h-auto justify-between section" id="header-main-footer">
+
+            <!-- Header Section-->
+
+            <header id="student-header" class="bg-[#1b263b] text-white p-4 shadow-md flex justify-between items-center ">
+
+            </header>
+
+            <!-- Main Section -->
+
+            <main id="main-section" class="bg-[#e0e1dd] max-sm:min-h-[100vh] h-auto  flex-1  " >
+                <section id="student-main" class="content-section hidden h-full"></section>
+                <section id="student_list" class="content-section  hidden h-full"></section>
+                <section id="Teacher_list" class="content-section  hidden h-full"></section>
+                <section id="class_List" class="content-section hidden h-full"></section>
+                <section id="add_class" class="content-section hidden h-full"></section>
+                <section id="notice" class="content-section hidden h-full"></section>
+                <section id="message" class="content-section hidden h-full"></section>
+                <section id="messageForm" class="content-section hidden h-full"></section>
+                <section id="profile" class="content-section hidden h-full"></section>
+                <section id="setting" class="content-section hidden h-full"></section>
+            </main>
+
+            <!-- Footer -->
+            
+            <footer id="student-footer"
+                class="bg-[#1b263b] h-[4rem]  text-[#8e9baa] text-[1rem]  w-[100%] bottom-0 p-4 shadow-md flex justify-around items-center ">
+            </footer>
+        </div>
+    </div>
+</body>
+<script src="../components/student/student-footer.js" defer></script>
+<script src="../components/student/student-header.js" defer></script>
+<script src="../components/student/student-main.js" defer></script>
+<script src="../components/student/student-navbar.js" defer></script>
+<script src="../components/student/profile.js" defer></script>
+<script src="../components/student/setting.js" defer></script>
+<script src="../components/student/noticeList.js" defer></script>
+<script src="../components/student/messageList.js" defer></script>
+<script src="../components/student/classList.js" defer></script>
+<script src="../components/student/TeacherList.js" defer></script>
+<script src="../components/student/studentList.js" defer></script>
+
+<script src="../js/student/dynamicPageST.js" defer></script>
+<script src="../js/student/forToggle.js" defer></script>
+<script src="../js/student/forCalender.js" defer></script>
+<script src="../js/student/classSection.js" defer></script>
+
+</html>
