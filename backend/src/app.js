@@ -17,9 +17,11 @@ app.use(cookieParser());
 
 const userRoutes = require('./routes/user.routes.js');
 const takeAttendanceRoutes = require('./routes/takeAttendance.routes.js');
+const classRoutes = require('./routes/class.routes.js');
 
 app.use('/api/user', userRoutes);
 app.use('/api/attendance', takeAttendanceRoutes);
+app.use('/api/class', classRoutes);
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');

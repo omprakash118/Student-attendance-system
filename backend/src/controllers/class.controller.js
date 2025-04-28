@@ -7,21 +7,24 @@ const Student = require('../models/student.models.js');
 
 // Create a new class
 const createClass = asyncHandler(async (req, res) => {
-    const { className, subject, teacher, students } = req.body;
+    const { className, subject, teacher, students = [] } = req.body;
 
-    // Check if teacher exists
+    if (!className || !subject || !teacher) {
+        throw new ApiError(400, "Class name, subject, and teacher are required");
+    }
+
     const teacherExists = await Teacher.findById(teacher);
     if (!teacherExists) {
         throw new ApiError(404, "Teacher not found");
     }
 
-    // Check if all students exist
-    const studentsExist = await Student.find({ '_id': { $in: students } });
-    if (studentsExist.length !== students.length) {
-        throw new ApiError(404, "Some students not found");
+    if (students.length > 0) {
+        const studentsExist = await Student.find({ '_id': { $in: students } });
+        if (studentsExist.length !== students.length) {
+            throw new ApiError(404, "Some students not found");
+        }
     }
 
-    // Create the new class
     const newClass = await Classes.create({ className, subject, teacher, students });
 
     return res.status(201).json(new ApiResponse(201, newClass, "Class created successfully"));
@@ -30,15 +33,19 @@ const createClass = asyncHandler(async (req, res) => {
 // Get all classes
 const getAllClasses = asyncHandler(async (req, res) => {
     const classes = await Classes.find()
-        .populate('teacher', 'Firstname Lastname') // populate teacher details
-        .populate('students', 'Firstname Lastname'); // populate students details
-    
+        .populate('teacher', 'Firstname Lastname')
+        .populate('students', 'Firstname Lastname');
+
     return res.status(200).json(new ApiResponse(200, classes, "Classes fetched successfully"));
 });
 
-// Get a class by its ID
+// Get class by ID
 const getClassById = asyncHandler(async (req, res) => {
-    const classId = req.params.classId;
+    const { classId } = req.params;
+
+    if (!classId) {
+        throw new ApiError(400, "Class ID is required");
+    }
 
     const classDetails = await Classes.findById(classId)
         .populate('teacher', 'Firstname Lastname')
@@ -51,88 +58,111 @@ const getClassById = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, classDetails, "Class fetched successfully"));
 });
 
-// Add a student to a class
+// Add student to class
 const addStudentToClass = asyncHandler(async (req, res) => {
     const { classId, studentId } = req.body;
 
-    // Check if class exists
+    if (!classId || !studentId) {
+        throw new ApiError(400, "Class ID and Student ID are required");
+    }
+
     const classDetails = await Classes.findById(classId);
     if (!classDetails) {
         throw new ApiError(404, "Class not found");
     }
 
-    // Check if student exists
     const student = await Student.findById(studentId);
     if (!student) {
         throw new ApiError(404, "Student not found");
     }
 
-    // Add student to the class
-    if (!classDetails.students.includes(studentId)) {
-        classDetails.students.push(studentId);
-        await classDetails.save();
-    }
+    await Classes.findByIdAndUpdate(classId, {
+        $addToSet: { students: studentId }
+    });
 
-    return res.status(200).json(new ApiResponse(200, classDetails, "Student added to class successfully"));
+    const updatedClass = await Classes.findById(classId)
+        .populate('teacher', 'Firstname Lastname')
+        .populate('students', 'Firstname Lastname');
+
+    return res.status(200).json(new ApiResponse(200, updatedClass, "Student added to class successfully"));
 });
 
-// Remove a student from a class
+// Remove student from class
 const removeStudentFromClass = asyncHandler(async (req, res) => {
     const { classId, studentId } = req.body;
 
-    // Check if class exists
+    if (!classId || !studentId) {
+        throw new ApiError(400, "Class ID and Student ID are required");
+    }
+
     const classDetails = await Classes.findById(classId);
     if (!classDetails) {
         throw new ApiError(404, "Class not found");
     }
 
-    // Remove student from the class
-    classDetails.students = classDetails.students.filter(student => student.toString() !== studentId);
-    await classDetails.save();
+    await Classes.findByIdAndUpdate(classId, {
+        $pull: { students: studentId }
+    });
 
-    return res.status(200).json(new ApiResponse(200, classDetails, "Student removed from class successfully"));
+    const updatedClass = await Classes.findById(classId)
+        .populate('teacher', 'Firstname Lastname')
+        .populate('students', 'Firstname Lastname');
+
+    return res.status(200).json(new ApiResponse(200, updatedClass, "Student removed from class successfully"));
 });
 
-// Update class details (e.g., change teacher, subject, etc.)
+// Update class details
 const updateClassDetails = asyncHandler(async (req, res) => {
-    const { classId, className, subject, teacher, students } = req.body;
+    const { classId } = req.body;
 
-    // Check if class exists
+    if (!classId) {
+        throw new ApiError(400, "Class ID is required");
+    }
+
+    const { className, subject, teacher, students } = req.body;
+
     const classDetails = await Classes.findById(classId);
     if (!classDetails) {
         throw new ApiError(404, "Class not found");
     }
 
-    // Update teacher
+    const updateFields = {};
+
+    if (className) updateFields.className = className;
+    if (subject) updateFields.subject = subject;
+
     if (teacher) {
         const teacherExists = await Teacher.findById(teacher);
         if (!teacherExists) {
             throw new ApiError(404, "Teacher not found");
         }
+        updateFields.teacher = teacher;
     }
 
-    // Update students
     if (students) {
         const studentsExist = await Student.find({ '_id': { $in: students } });
         if (studentsExist.length !== students.length) {
             throw new ApiError(404, "Some students not found");
         }
+        updateFields.students = students;
     }
 
-    // Update class details
-    classDetails.className = className || classDetails.className;
-    classDetails.subject = subject || classDetails.subject;
-    classDetails.teacher = teacher || classDetails.teacher;
-    classDetails.students = students || classDetails.students;
+    await Classes.findByIdAndUpdate(classId, { $set: updateFields }, { new: true });
 
-    await classDetails.save();
+    const updatedClass = await Classes.findById(classId)
+        .populate('teacher', 'Firstname Lastname')
+        .populate('students', 'Firstname Lastname');
 
-    return res.status(200).json(new ApiResponse(200, classDetails, "Class updated successfully"));
+    return res.status(200).json(new ApiResponse(200, updatedClass, "Class updated successfully"));
 });
 
-// Delete a class
+// Delete class
 const deleteClass = asyncHandler(async (req, res) => {
-    const classId = req.params.classId;
+    const { classId } = req.params;
+
+    if (!classId) {
+        throw new ApiError(400, "Class ID is required");
+    }
 
     const classDetails = await Classes.findByIdAndDelete(classId);
 
