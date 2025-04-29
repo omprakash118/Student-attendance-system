@@ -17,6 +17,71 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 });
 
+// It for register admin
+const registerAdmin = asyncHandler(async (req, res) => {
+    // get user details from frontend
+    // validation - not empty
+    // check if user already exists: username, email
+    // create user object - create entry in db
+    // remove password and refresh token field from response
+    // check for user creation
+    // return res
+
+    // get user details from frontend
+    const {
+        Firstname,
+        Lastname,
+        username,
+        email,
+        password,
+        mobilePhone,
+        officePhone,
+        address,
+        bioNotes,
+    } = req.body;
+
+
+    // validation - not empty
+    // if (
+    //     [username , Firstname , email , password , mobilePhone , subjects , address].some((field) => field?.trim() === "")
+    // ){
+    //     throw new ApiError(400, "Please fill all the required fields");
+    // }
+
+    // check if user already exists: username, email
+    const exitsUser = await Admin.findOne({
+        $or : [ {username} , {email}]
+    })
+    if(exitsUser){
+        throw new ApiError(409, "User with email or username already exists");
+    }
+
+    // create user object - create entry in db
+
+    const admin = await Admin.create({
+        username : username.toLowerCase(),
+        Firstname,
+        Lastname,
+        email,
+        password,
+        mobilePhone,
+        officePhone,
+        address,
+        bioNotes,
+    });
+
+    const createAdmin = await Admin.findById(admin._id).select("-password -refreshToken")
+
+    if(!createAdmin){
+        throw new ApiError(500,"Somthing went wrong while creating teacher account");
+    }
+
+    return res.status(201).json(
+        new ApiResponse(200, createAdmin, "Admin register successfully")
+    )
+});
+
+
 // It for register teacher
 const registerTeacher = asyncHandler(async (req, res) => {
     // get user details from frontend
@@ -426,6 +491,7 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
 
 module.exports = {
   registerUser,
+  registerAdmin,
   registerTeacher,
   registerStudent,
   loginUser,

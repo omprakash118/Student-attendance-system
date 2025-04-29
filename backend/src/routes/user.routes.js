@@ -4,6 +4,7 @@ const verifyJwt = require('../middlewares/auth.middlewares.js');
 const router = Router();
 
 const { registerUser,
+    registerAdmin,
     registerTeacher,
     registerStudent,
     loginUser,
@@ -13,6 +14,7 @@ const { registerUser,
 router.route('/login').post(loginUser);
 router.route('/logout').post(verifyJwt, logoutUser);
 router.route('/register').post(registerUser);
+router.route('/registerAdmin').post(registerAdmin);
 router.route('/registerTeacher').post(registerTeacher);
 router.route('/registerStudent').post(registerStudent);
 router.route("/refresh-token").post(refreshAccessToken)
