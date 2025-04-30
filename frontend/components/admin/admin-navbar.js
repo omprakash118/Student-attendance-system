@@ -38,7 +38,7 @@ navBar.innerHTML = `
               <div class="mt-4 hidden dropdownMenu transition-all duration-500" >
                 <ul class="flex-col rounded-2xl text-xl max-sm:text-2xl text-[#737b85] ">
                   <li class="p-3 pl-7  hover:bg-[#0d1b2a] rounded-2xl hover:text-white active:bg-[#415a77]">
-                    <a href="" class="block nav-link" data-target = "Teacher_list">
+                    <a href="" id="fetchTeachers" class="block nav-link" data-target = "Teacher_list">
                       
                       <i class="fa-solid fa-list  pr-3.5"></i>
                       <span>Teacher List</span>

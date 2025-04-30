@@ -99,11 +99,11 @@ teacherSchema.methods.generateAccessToken = function(){
             username: this.username,
             email: this.email,
             Firstname: this.Firstname,
-            role: "teacher"
+            role: 'teacher'
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn : process.env.ACCESS_TOKEN_EXPIRY || '1d',
         }
     )
 }
@@ -117,10 +117,11 @@ teacherSchema.methods.generateRefreshToken = function(){
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn : process.env.REFRESH_TOKEN_EXPIRY || '10d',
         }
     )
 }
+
 
 
 

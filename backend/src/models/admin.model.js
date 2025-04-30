@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bycrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // Address Sub Schemas
@@ -10,6 +10,7 @@ const addressSchema = new mongoose.Schema({
     state: { type: String, required: true },
     zipCode: { type: String, required: true },
 });
+
 
 // Admin Schema 
 const adminSchema = new mongoose.Schema({
@@ -44,7 +45,7 @@ const adminSchema = new mongoose.Schema({
     },
     officePhone : { 
         type : Number, 
-        required : true
+        required : true 
     },
     address : { 
         type : addressSchema , 
@@ -66,14 +67,16 @@ const adminSchema = new mongoose.Schema({
 adminSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
 
-    this.password = await bycrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 })
 
 // Use to check if the password is correct
-adminSchema.methods.isPasswordCorrect = async function(password){
-    return await bycrypt.compare(password, this.password);
-}
+adminSchema.methods.isPasswordCorrect = async function (password) {
+    console.log("password   : ", password);
+    console.log("this       : ", this.password);
+    return await bcrypt.compare(password, this.password); 
+};
 
 // Use to generate access JWT token for the user
 adminSchema.methods.generateAccessToken = function(){
@@ -87,7 +90,7 @@ adminSchema.methods.generateAccessToken = function(){
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn : process.env.ACCESS_TOKEN_EXPIRY || '1d',
         }
     )
 }
@@ -101,7 +104,7 @@ adminSchema.methods.generateRefreshToken = function(){
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn : process.env.REFRESH_TOKEN_EXPIRY || '10d',
         }
     )
 }

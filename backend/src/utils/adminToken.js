@@ -8,6 +8,7 @@ const generateAdminTokens = async (adminId) => {
             throw new ApiError(404, "Admin not found");
         }
 
+        console.log("Admin found: ", admin);
         const accessToken = admin.generateAccessToken();
         const refreshToken = admin.generateRefreshToken();
 
@@ -16,7 +17,8 @@ const generateAdminTokens = async (adminId) => {
 
         return { accessToken, refreshToken };
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating admin tokens");
+        console.error("Error in generateAdminTokens:", error);
+        throw new ApiError(500, error.message || "Something went wrong while generating admin tokens");
     }
 };
 

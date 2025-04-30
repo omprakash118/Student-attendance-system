@@ -223,7 +223,7 @@ const registerStudent = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, username, password, role } = req.body;
 
-    console.log("login user", req.body);
+    // console.log("login user", req.body);
 
     if (!username && !email) {
         throw new ApiError(400, "username or email is required");
@@ -240,7 +240,7 @@ const loginUser = asyncHandler(async (req, res) => {
     else if (role === "student") Model = Student;
     else throw new ApiError(400, "Invalid role provided");
 
-    console.log("Model", Model);
+    // console.log("Model", Model);
 
     const user = await Model.findOne({
         $or: [{ username }, { email }]
@@ -262,7 +262,7 @@ const loginUser = asyncHandler(async (req, res) => {
     // const { accessToken, refreshToken } = await generateTokens(Model, user._id);
 
     let tokens;
-
+    console.log("user Id" , user._id);
     if (role === "admin") {
         tokens = await generateAdminTokens(user._id);
     } else if (role === "teacher") {
@@ -271,7 +271,7 @@ const loginUser = asyncHandler(async (req, res) => {
         tokens = await generateStudentTokens(user._id);
     }
     
-
+    
     const loggedInUser = await Model.findById(user._id).select("-password -refreshToken");
 
     const options = {
@@ -286,7 +286,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                { user: loggedInUser, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken },
+                { user: loggedInUser, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken , userId: user._id },
                 "User logged In Successfully"
             )
         );
@@ -324,7 +324,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .clearCookie("accessToken", options)
         .clearCookie("refreshToken", options)
         .json(new ApiResponse(200, {}, "User logged Out"));
-});
+}); 
 
 
 // It for refresh access token 

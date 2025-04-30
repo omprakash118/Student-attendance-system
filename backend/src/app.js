@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 const app = express();
 
 app.use(cors({
-  origin : process.env.CORS_ORIGIN,
-  credentials : true
+  origin: process.env.CORS_ORIGIN || 'http://127.0.0.1:5500', // Replace with your frontend URL
+  credentials: true
 }));
 
 app.use(express.json({limit : "50kb"}));
@@ -30,6 +31,20 @@ app.use('/api/student', studentRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notice', noticeRoutes);
+
+// Serve frontend files
+app.use(express.static(path.join(__dirname, '../../frontend')));
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/pages/admin.page.html'));
+});
+app.get('/teacher', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/pages/teacher.page.html'));
+});
+app.get('/student', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/pages/student.page.html'));
+});
+
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');
