@@ -29,7 +29,7 @@ const createNotice = asyncHandler(async (req, res) => {
     // Step 3: Upload file to cloudinary
     const uploadedFile = await uploadCloudinary(fileLocalPath);
 
-    console.log("Uploaded file", uploadedFile);
+    // console.log("Uploaded file", uploadedFile);
 
     if (!uploadedFile) {
         throw new ApiError(400, "File upload failed");

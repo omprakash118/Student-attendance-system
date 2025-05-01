@@ -8,7 +8,7 @@ const generateAdminTokens = async (adminId) => {
             throw new ApiError(404, "Admin not found");
         }
 
-        console.log("Admin found: ", admin);
+        // console.log("Admin found: ", admin);
         const accessToken = admin.generateAccessToken();
         const refreshToken = admin.generateRefreshToken();
 

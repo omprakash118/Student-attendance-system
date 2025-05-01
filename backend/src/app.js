@@ -32,6 +32,15 @@ app.use('/api/teacher', teacherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notice', noticeRoutes);
 
+
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err.message);
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Something went wrong on the server"
+  });
+});
+
 // Serve frontend files
 app.use(express.static(path.join(__dirname, '../../frontend')));
 

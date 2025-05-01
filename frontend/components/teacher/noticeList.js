@@ -1,7 +1,7 @@
 const notice = document.getElementById('notice');
 
 notice.innerHTML = `
-    <div class="w-full  h-[125vh]">
+    <div class="w-full  min-h-[125vh]">
 
         <div class="flex justify-between items-center text-center titel h-[7rem] bg-[#e0e1dd] shadow-lg  ">
             <h2 class=" title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold w-[40%] ">Notices</h2>
@@ -10,26 +10,50 @@ notice.innerHTML = `
                     <i class="fa-solid fa-file-circle-plus"></i>
                 </button>
         </div>
-        <div class="space-y-4 pl-[5rem] pr-[5rem] max-sm:pl-[2rem] max-sm:pr-[2rem] pt-8">
-            <!-- Notice Card -->
-            <div class="rounded-lg border border-[#8e9baa] bg-[#1b263b] p-4 transition duration-300 active:scale-97 cursor-pointer">
-                <h3 class="text-lg max-sm:text-2xl font-semibold text-[#e0e1dd]">Exam Date Update</h3>
-                <p class="mt-2 text-[#8e9baa] max-sm:text-xl">The exam date is postponed to 15th March.</p>
-                <div class="mt-3 text-sm max-sm:text-xl text-[#778da9]">
-                    <p>Posted by: <span class="font-medium">Admin</span></p>
-                    <p>09 March 2025</p>
-                </div>
-            </div>
-
-            <div class="rounded-lg border border-[#8e9baa] bg-[#1b263b] p-4 transition duration-300 active:scale-97 cursor-pointer">
-                <h3 class="text-lg max-sm:text-2xl font-semibold text-[#e0e1dd]">Holiday Notice</h3>
-                <p class="mt-2 text-[#8e9baa] max-sm:text-xl">The college will remain closed on 10th March.</p>
-                <div class="mt-3 text-sm text-[#778da9] max-sm:text-xl">
-                    <p>Posted by: <span class="font-medium">Principal</span></p>
-                    <p>08 March 2025</p>
-                </div>
-            </div>
+        <div id="notice-container" class="space-y-4 pl-[5rem] pr-[5rem] max-sm:pl-[2rem] max-sm:pr-[2rem] pt-8">
+            
+            
         </div>
     </div>
 `;
 
+
+const noticeContainer = document.querySelector('#notice-container'); // Your parent div
+
+async function fetchNotices() {
+  try {
+    const res = await fetch('http://localhost:8000/api/notice'); // Replace with your endpoint
+    const { data: notices } = await res.json();
+
+    
+    notices.forEach(notice => {
+      const formattedDate = new Date(notice.dateIssued).toLocaleDateString();
+
+      const fileSection = notice.files.length > 0
+        ? `<a href="${notice.files[0].fileUrl}" target="_blank" class="text-[#e0e1dd] underline">${notice.files[0].fileName}</a>`
+        : `<span class="text-[#e0e1dd]">No file attached</span>`;
+
+      const card = `
+        <div class="rounded-lg border border-[#8e9baa] bg-[#1b263b] p-4 mb-4">
+          <h2 class="text-lg font-semibold text-[#e0e1dd]">${notice.Title}</h2>
+          <h3 class="text-md font-semibold text-[#e0e1dd]">Audience: ${notice.audience}</h3>
+          <p class="mt-2 text-[#8e9baa]">${notice.description}</p>
+          <div class="mt-3 text-sm text-[#778da9]">
+            <p>Date Issued: ${formattedDate}</p>
+          </div>
+          <div class="mt-3 text-sm text-[#778da9]">
+            <p>File: ${fileSection}</p>
+          </div>
+        </div>
+      `;
+
+      noticeContainer.innerHTML += card;
+
+    });
+
+  } catch (err) {
+    console.error('Error fetching notices:', err);
+  }
+}
+
+fetchNotices();
