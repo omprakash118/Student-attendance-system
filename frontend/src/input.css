@@ -296,20 +296,7 @@
     color: white;
 }
 
-.late-button {
-    background-color: rgba(255, 143, 0, 0.2);
-    color: #ffa726;
-    border-color: #ef6c00;
-}
 
-.late-button:hover {
-    background-color: rgba(255, 143, 0, 0.4);
-}
-
-.late-button.active {
-    background-color: #ef6c00;
-    color: white;
-}
 
 .action-buttons {
     display: flex;
@@ -396,11 +383,6 @@
     border: 1px solid #c62828;
 }
 
-.status-late {
-    background-color: rgba(255, 143, 0, 0.2);
-    color: #ffa726;
-    border: 1px solid #ef6c00;
-}
 
 
 @media (max-width: 768px) {

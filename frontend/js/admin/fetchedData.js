@@ -31,6 +31,9 @@ async function fetchAdminDetails(adminId) {
         document.getElementById('officePhone').value = data.officePhone || '';
         document.getElementById('bioNotes').value = data.bioNotes || '';
 
+        document.getElementById('logname').textContent = data.Firstname || ''; // Set the logged-in username in the header
+        document.getElementById('firstLast').textContent = `${data.Firstname || ''} ${data.Lastname || ''}`; // Set the full name in the dropdown
+
         // Address fields
         const address = data.address || {};
         console.log('Address:', address); // Log the address for debugging

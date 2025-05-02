@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="../src/output.css">
     <link rel="stylesheet" href="../styles/adminCss.css">
     <script src="https://kit.fontawesome.com/a9bed58581.js" crossorigin="anonymous"></script>
-
+<!--     
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -53,7 +55,8 @@
             <!-- Main Section -->
 
             <main id="admin-main" class="bg-[#e0e1dd] max-sm:min-h-[100vh] h-auto  flex-1  " >
-                <section id="take-attendance" class="content-section h-full"></section>
+                <section id="dashboard" class="content-section hidden h-full"></section>
+                <section id="take-attendance" class="content-section hidden h-full"></section>
                 <section id="student_list" class="content-section hidden h-full"></section>
                 <section id="add_Student" class="content-section hidden h-full"></section>
                 <section id="add_Teacher" class="content-section hidden h-full"></section>
@@ -79,8 +82,8 @@
 <script src="../js/script.js" defer></script>
 <script src="../components/admin/admin-navbar.js" defer></script>
 <script src="../components/admin/admin-header.js" defer></script>
-<!-- <script src="../components/admin-main.js" defer></script> -->
-<script src="../components/admin/take-attendance.js" defer></script>
+<script src="../components/admin/dashboard.js" defer></script>
+<script src="../components/admin/take-attendance-a.js" defer></script>
 <script src="../components/admin/studentList.js" defer></script>
 <script src="../components/admin/addStudent.js" defer></script>
 <script src="../components/admin/addTeacher.js" defer></script>

@@ -25,5 +25,5 @@ document.addEventListener("DOMContentLoaded" , () => {
         })
     });
 
-    showSection('teacher-main');
+    showSection('dashboard');
 });

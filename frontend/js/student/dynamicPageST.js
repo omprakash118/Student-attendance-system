@@ -28,5 +28,5 @@ document.addEventListener("DOMContentLoaded" , () => {
         })
     });
 
-    showSection('student-main');
+    showSection('dashboard'); // Show the default section on page load
 });

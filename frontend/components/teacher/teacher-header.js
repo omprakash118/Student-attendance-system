@@ -20,14 +20,14 @@ myHeader.innerHTML = `
 <div class="relative mr-[4rem] max-sm:mr-[2rem] max-sm:ml-[2rem]">
     <button id="dropdownBtn" class="flex items-center px-4 py-2 bg-[#e0e1dd] hover:text-[#e0e1dd] active:bg-[#8e9baa] hover:bg-[#415a77] rounded-lg shadow-md  text-[#415a77] transition cursor-pointer">
         <i class="fa-regular fa-user  mr-2"></i>
-        <span class="font-semibold ">josh</span>
+        <span class="font-semibold " id="logname"></span>
         <i class="fa-solid fa-angle-left ml-2 transition-transform transform" id="arrowIcon"></i>
     </button>
 
     <div id="dropdownMenu" class=" w-60 bg-gray-200  shadow-md rounded-lg p-4 absolute right-0 mt-2 h-auto border border-[#415a77] hidden  transition-all duration-300 ease-in-out z-10  ">
       <div class="px-4 py-3  h-[7rem] text-center  text-2xl text-[#1b263b] border-b border-[#415a77]">
           <i class="fa-regular fa-user  text-3xl"></i>
-          <p class="font-semibold mt-1">josh prajapat</p>
+          <p id="firstLast" class="font-semibold mt-1"></p>
       </div>
 
       <ul class="mt-2 space-y-2 text-[#1b263b]">

@@ -127,7 +127,10 @@
               console.log("Login response:", data); // Check full data
               console.log("Storing userId:", data.data.userId); // Ensure userId exists
 
-  
+              if (role === 'teacher') {
+                  localStorage.setItem('teacher', JSON.stringify(data.data));
+             }
+
               // Redirect to appropriate page based on role
               if (role === 'admin') {
                   window.location.href = '/frontend/pages/admin.page.html';

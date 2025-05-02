@@ -89,10 +89,35 @@ const getAttendanceById = asyncHandler(async (req, res) => {
   );
 });
 
+const getAttendanceByClassAndDate = asyncHandler(async (req, res) => {
+  const { classId, date } = req.query;
+
+  if (!classId || !date) {
+    throw new ApiError(400, "classId and date are required");
+  }
+
+  const attendance = await Attendance.findOne({
+    classId,
+    date: {
+      $gte: new Date(date),
+      $lt: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000)
+    }
+  })
+    .populate('classId', 'className subject')
+    .populate('teacherId', 'Firstname Lastname')
+    .populate('attendanceData.studentId', 'Firstname Lastname');
+
+  if (!attendance) {
+    return res.status(200).json(new ApiResponse(200, null, "No attendance found"));
+  }
+
+  return res.status(200).json(new ApiResponse(200, attendance, "Attendance found"));
+});
 
 // Exporting the controllers
 module.exports = {
   takeAttendance,
   getAllClasses,
   getAttendanceById,
+  getAttendanceByClassAndDate
 };

@@ -14,7 +14,7 @@ navBar.innerHTML = `
               <div class="hidden">
                 <i class="fa-solid fa-gauge"></i>
               </div>
-              <a href="" class="block btnHidden nav-link" data-target = "teacher-main"> <i class="fa-solid fa-gauge pr-4"></i>Dashboard</a>
+              <a href="" class="block btnHidden nav-link" data-target = "dashboard"> <i class="fa-solid fa-gauge pr-4"></i>Dashboard</a>
             </li>
             
             <li class="p-3 pl-7 hover:bg-[#1b263b] hover:rounded-2xl   hover:text-white active:bg-[#415a77] ">

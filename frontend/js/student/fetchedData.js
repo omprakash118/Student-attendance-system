@@ -30,6 +30,10 @@ async function fetchAdminDetails(studentId) {
         document.getElementById('classAssigned').value = data.classAssigned || '';
         document.getElementById('bioNotes').value = data.bioNotes || '';
 
+        document.getElementById('logname').textContent = data.Firstname || ''; // Set the logged-in username in the header
+        document.getElementById('firstLast').textContent = `${data.Firstname || ''} ${data.Lastname || ''}`; // Set the full name in the dropdown
+
+        
         // Address fields
         const address = data.address || {};
         document.getElementById('street').value = address.street || '';

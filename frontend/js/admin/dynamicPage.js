@@ -25,5 +25,5 @@ document.addEventListener("DOMContentLoaded" , () => {
         })
     });
 
-    showSection('take-attendance');
+    showSection('dashboard'); // Show the default section on page load
 });

@@ -1,0 +1,134 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../src/input.css">
+    <link rel="stylesheet" href="../src/output.css">
+    <link rel="stylesheet" href="../styles/adminCss.css">
+    <script src="https://kit.fontawesome.com/a9bed58581.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rubik+Wet+Paint&display=swap"
+        rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen p-6">
+
+  <h1 class="text-3xl font-bold mb-6">Attendance Dashboard</h1>
+
+  <div class="mb-4">
+    <label for="classSelect" class="mr-2">Select Class:</label>
+    <select id="classSelect" class="text-black px-2 py-1 rounded">
+      <option value="">-- Select --</option>
+    </select>
+  </div>
+
+  <div class="mb-6">
+    <label for="dateInput" class="mr-2">Select Date:</label>
+    <input type="date" id="dateInput" class="text-black px-2 py-1 rounded">
+  </div>
+
+  <canvas id="attendanceChart" width="400" height="200"></canvas>
+
+  <!-- <script src="dashboard.js"></script> -->
+
+  <script>
+    // dashboard.js
+
+const classSelect = document.getElementById('classSelect');
+const dateInput = document.getElementById('dateInput');
+let chartInstance = null;
+
+// Load classes into dropdown
+async function loadClasses() {
+  try {
+    const res = await fetch('http://localhost:8000/api/class');
+    const result = await res.json();
+
+    result.data.forEach(cls => {
+      const option = document.createElement('option');
+      option.value = cls._id;
+      option.textContent = cls.className;
+      classSelect.appendChild(option);
+      console.log(cls._id, cls.className);
+      console.log('Class loaded:', cls);
+    });
+  } catch (err) {
+    console.error('Error loading classes:', err);
+  }
+}
+
+// Render the attendance chart
+async function renderChart() {
+  const classId = classSelect.value;
+  const date = dateInput.value;
+  if (!classId || !date) return;
+  console.log('Class ID:', classId);
+  console.log('Date:', date);
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/attendance/get-attendance-by-class?classId=${classId}&date=${date}`);
+    console.log('Response:', res);
+    const result = await res.json();
+    console.log('Result:', result);
+    console.log('Attendance data:', result.data);
+    const attendanceData = result.data?.attendanceData || [];
+console.log('Attendance data:', attendanceData);
+
+const present = attendanceData.filter(a => a.status === 'Present').length;
+const absent = attendanceData.filter(a => a.status === 'Absent').length;
+
+
+    const data = {
+      labels: ['Present', 'Absent'],
+      datasets: [{
+        label: 'Attendance',
+        data: [present, absent],
+        backgroundColor: ['#10b981', '#ef4444']
+      }]
+    };
+
+    const config = {
+      type: 'bar',
+      data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: {
+            display: true,
+            text: 'Class Attendance Summary'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+    // Destroy old chart if exists
+    if (chartInstance) chartInstance.destroy();
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    chartInstance = new Chart(ctx, config);
+
+  } catch (err) {
+    console.error('Error fetching attendance:', err);
+  }
+}
+
+// Event listeners
+classSelect.addEventListener('change', renderChart);
+dateInput.addEventListener('change', renderChart);
+
+// Initialize
+loadClasses();
+
+  </script>
+</body>
+</html>
