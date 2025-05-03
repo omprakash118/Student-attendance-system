@@ -10,19 +10,19 @@ dashboard.innerHTML = `
 
   <div class="flex justify-center items-center m-6 max-sm:m-2">
     <div class="w-[80%] max-sm:w-[95%]">
-      <div class="flex flex-col gap-6 p-6 w-full backdrop-blur-lg rounded-lg  shadow-lg">
+      <div class="flex flex-col gap-6 p-6 w-full backdrop-blur-lg rounded-lg  shadow-lg bg-gray-200 ">
         <!-- Controls -->
-        <div class="flex flex-wrap justify-evenly items-center gap-4 w-[80%] bg-[#1b263b] p-6 rounded-lg shadow-lg ">
-          <div class=" text-[#0d1b2a] p-4 rounded-lg w-[30%] shadow-lg bg-[#e0e1dd]" style="width: 30%;">
+        <div class="flex flex-wrap justify-evenly items-center gap-4 w-[80%]  p-6  ">
+          <div class=" text-[#e0e1dd]  p-4 rounded-lg w-[30%] shadow-lg bg-[#415a77]" style="width: 40%;">
             <label for="classSelect" class="block mb-2 font-semibold">Select Class:</label>
-            <select id="classSelect" class=" border border-gray-300 w-full rounded px-3 py-2 text-[#1b263b] cursor-pointer">
+            <select id="classSelect" class="  w-full border border-gray-800 rounded px-3 py-2 text-[#1b263b] cursor-pointer">
               <option value="">-- Select --</option>
             </select>
           </div>
 
-          <div class=" text-[#0d1b2a] p-4 rounded-lg shadow-lg w-[30%] bg-[#e0e1dd]" style="width: 30%;">
+          <div class=" text-[#e0e1dd] p-4 rounded-lg shadow-lg w-[30%] bg-[#415a77]" style="width: 40%;">
             <label for="dateInput" class="block mb-2 font-semibold">Select Date:</label>
-            <input type="date" id="dateInput" class="w-full border border-gray-300 rounded px-3 py-2 cursor-pointer">
+            <input type="date" id="dateInput" class="w-full border border-gray-800 rounded px-3 py-2 cursor-pointer">
           </div>
         </div>
 
@@ -33,7 +33,9 @@ dashboard.innerHTML = `
       </div>
     </div>
   </div>
+               
 `;
+
 
 
 const classSelect = document.getElementById("classSelect");
@@ -51,8 +53,8 @@ async function loadClasses() {
       option.value = cls._id;
       option.textContent = cls.className;
       classSelect.appendChild(option);
-      console.log(cls._id, cls.className);
-      console.log("Class loaded:", cls);
+      // console.log(cls._id, cls.className);
+      // console.log("Class loaded:", cls);
     });
   } catch (err) {
     console.error("Error loading classes:", err);
@@ -75,18 +77,22 @@ async function renderChart() {
 
     const result = await res.json();
 
+    console.log("Attendance data:", result.data);
+
     const attendanceData = result.data?.attendanceData || [];
 
     const present = attendanceData.filter((a) => a.status === "Present").length;
     const absent = attendanceData.filter((a) => a.status === "Absent").length;
 
+    console.log("Present:", present);
+    console.log("Absent:", absent);
     const data = {
       labels: ["Present", "Absent"],
       datasets: [
         {
           label: ["Present", "Absent"],
           data: [present, absent],
-          backgroundColor: ["#1b263b", "#ef4444"],
+          backgroundColor: ["#10b981", "#ef4444"],
         },
       ],
     };

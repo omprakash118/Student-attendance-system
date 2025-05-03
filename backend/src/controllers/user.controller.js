@@ -102,7 +102,6 @@ const registerTeacher = asyncHandler(async (req, res) => {
         mobilePhone,
         officePhone,
         subjects,
-        customSubjects,
         address,
         bioNotes,
     } = req.body;
@@ -134,7 +133,6 @@ const registerTeacher = asyncHandler(async (req, res) => {
         mobilePhone,
         officePhone,
         subjects,
-        customSubjects,
         address,
         bioNotes,
     });
@@ -254,7 +252,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const isPasswordValid = await user.isPasswordCorrect(password);
 
-    console.log("isPasswordValid", isPasswordValid);
+    // console.log("isPasswordValid", isPasswordValid);
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid user credentials");
     }

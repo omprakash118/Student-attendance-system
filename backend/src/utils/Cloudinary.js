@@ -20,8 +20,13 @@ const uploadCloudinary = async (localFilePath) => {
     if (!localFilePath) return null;
 
     const absolutePath = path.resolve(localFilePath); // Ensure absolute path
+
+    const ext = path.extname(absolutePath).toLowerCase();
+
+    const resourceType = ext === '.pdf' ? 'raw' : 'auto';
+
     const result = await cloudinary.uploader.upload(absolutePath, {
-      resource_type: "auto"
+      resource_type: resourceType
     });
 
     fs.unlinkSync(absolutePath); // Remove local file
@@ -30,7 +35,7 @@ const uploadCloudinary = async (localFilePath) => {
     console.error("❌ Error uploading file to Cloudinary:", error.message);
 
     // Cleanup local file if upload failed
-    if (fs.existsSync(localFilePath)) {
+    if (fs.existsSync(localFilePath)) { 
       fs.unlinkSync(localFilePath);
     }
 

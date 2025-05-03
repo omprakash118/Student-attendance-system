@@ -15,7 +15,7 @@ takeattendance.innerHTML = `
         <div class="flex-1 flex flex-col items-start text-[#e0e1dd]" id="attendance-section">
           <div class="header">
             <div class="controls">
-              <div class="dropdown-container max-sm:text-2xl">
+              <div class="dropdown-container max-sm:text-2xl ">
                 <button class="dropdown-button" id="classDropdown">
                   <span id="selectedClass">Select Class</span>
                   <i class="fa-solid fa-angle-down"></i>
@@ -57,11 +57,11 @@ async function loadClasses() {
       const response = await res.json();
       const classes = response.data || [];
         
-      console.log(classes); // Debugging line to check the classes fetched
+      // console.log(classes); // Debugging line to check the classes fetched
       const menu = document.getElementById('classMenu');
       menu.innerHTML = '';
 
-      console.log(menu); // Debugging line to check the dropdown menu element
+      // console.log(menu); // Debugging line to check the dropdown menu element
   
       classes.forEach(cls => {
         const div = document.createElement('div');
@@ -75,7 +75,7 @@ async function loadClasses() {
           await fetchAndRenderStudents(cls._id);
         });
         menu.appendChild(div);
-        console.log(div); // Debugging line to check the dropdown items
+        // console.log(div); // Debugging line to check the dropdown items
       });
     } catch (err) {
       console.error(err);

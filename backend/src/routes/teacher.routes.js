@@ -13,8 +13,8 @@ const {
 
 router.get('/', getAllTeachers);                  // GET all teachers
 router.get('/:teacherId', getTeacherById);         // GET a teacher by ID
-router.put('/:teacherId', updateTeacher);          // UPDATE a teacher by ID
-router.delete('/:teacherId', deleteTeacher);       // DELETE a teacher by ID
+router.put('/update/:teacherId', updateTeacher);          // UPDATE a teacher by ID
+router.delete('/delete/:teacherId', deleteTeacher);       // DELETE a teacher by ID
 
 module.exports = router;
  

@@ -20,44 +20,15 @@ studentList.innerHTML = `
         <th class="p-3 text-left">FIRST</th>
         <th class="p-3 text-left">LAST</th>
         <th class="p-3 text-left">EMAIL</th>
-        <th class="p-3 text-left">MOBILE PHONE</th>
+        <th class="p-3 text-left">CLASS</th>
       </tr>
     </thead>
-    <tbody>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300  transition duration-200 active:scale-97">
-        <td class="p-3">Stive</td>
-        <td class="p-3">Smith</td>
-        <td class="p-3"></td>
-        <td class="p-3"></td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
-        <td class="p-3">Jay</td>
-        <td class="p-3">Mali</td>
-        <td class="p-3"></td>
-        <td class="p-3"></td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97 ">
-        <td class="p-3">Joe</td>
-        <td class="p-3">Root</td>
-        <td class="p-3">joe@gmai.com</td>
-        <td class="p-3">(784) 956-3829</td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
-        <td class="p-3">Josh</td>
-        <td class="p-3">Buttler</td>
-        <td class="p-3"></td>
-        <td class="p-3"></td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
-        <td class="p-3">Rohit</td>
-        <td class="p-3">Sharma</td>
-        <td class="p-3">sharma@gmail.com</td>
-        <td class="p-3"></td>
-      </tr>
+    <tbody id="studentListOP">
+      
     </tbody>
   </table>
   <div class="mt-4 flex items-center justify-between">
-    <p class="text-[#8e9baa]">Page <strong>1</strong> of 1 :: <strong>5</strong> students</p>
+    <p class="text-[#8e9baa]" id="totalStudents"></p>
     <div class="flex space-x-2">
       <button class="cursor-pointer rounded-md  px-2 py-1 text-[#8e9baa] hover:bg-gray-200 transition duration-300 active:scale-95 ">«</button>
       <button class="cursor-pointer rounded-md  px-2 py-1 text-[#8e9baa] hover:bg-gray-200 transition duration-300 active:scale-95 ">‹</button>
@@ -72,3 +43,37 @@ studentList.innerHTML = `
 `;
 
 //  class="bg-gray-100 flex items-center justify-center min-h-screen"
+
+
+const studentListOP = document.getElementById("studentListOP");
+
+async function fetchStudents() {
+  try { 
+    const res = await fetch('http://localhost:8000/api/student'); // Replace with your endpoint
+    const { data: students } = await res.json();
+
+    const length = students.length;
+
+    const totalStudents = document.getElementById("totalStudents");
+    totalStudents.innerHTML = `Total Students: ${length}`; // Display the total number of students
+
+    students.forEach(student => {
+      const card = `
+        <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
+          <td class="p-3">${student.Firstname}</td>
+          <td class="p-3">${student.Lastname}</td>
+          <td class="p-3">${student.email}</td>
+          <td class="p-3">${student.mobilePhone}</td>
+        </tr>
+      `;
+      studentListOP.innerHTML += card;
+    });
+
+  }
+  catch (err) {
+    console.error("Error fetching students:", err);
+    alert("Error fetching students. Please try again later.");
+  }
+}
+
+fetchStudents();

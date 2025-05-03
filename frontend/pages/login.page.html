@@ -124,8 +124,8 @@
               // Store userId in localStorage
               localStorage.setItem('userId', data.data.userId);
               //✅ Correct
-              console.log("Login response:", data); // Check full data
-              console.log("Storing userId:", data.data.userId); // Ensure userId exists
+              // console.log("Login response:", data); // Check full data
+              // console.log("Storing userId:", data.data.userId); // Ensure userId exists
 
               if (role === 'teacher') {
                   localStorage.setItem('teacher', JSON.stringify(data.data));

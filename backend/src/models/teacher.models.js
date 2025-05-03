@@ -52,12 +52,6 @@ const teacherSchema = new mongoose.Schema({
     subjects : { 
         type : String , 
         required : true
-        
-    },
-    customSubjects : { 
-        type : String , 
-        required : true
-        
     },
     address : { 
         type : addressSchema , 
@@ -67,8 +61,7 @@ const teacherSchema = new mongoose.Schema({
     },
     bioNotes: { 
         type: String, 
-        default: '' 
-        
+        default: ''   
     },
     refreshToken: { 
         type: String, 
