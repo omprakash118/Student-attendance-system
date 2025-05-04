@@ -5,10 +5,7 @@ notice.innerHTML = `
 
         <div class="flex justify-between items-center text-center titel h-[7rem] bg-[#e0e1dd] shadow-lg  ">
             <h2 class=" title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold w-[40%] ">Notices</h2>
-                <button 
-                    class="w-[8%] cursor-pointer rounded-md border-none bg-[#415a77] px-4 py-2 mr-[5rem] max-sm:mr-[2rem] text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77] nav-link"  data-target = "notice_form" >
-                    <i class="fa-solid fa-file-circle-plus"></i>
-                </button>
+          
         </div>
         <div id="notice-container" class="space-y-4 pl-[5rem] pr-[5rem] max-sm:pl-[2rem] max-sm:pr-[2rem] pt-8">
             

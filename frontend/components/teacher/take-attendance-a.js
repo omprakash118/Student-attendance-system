@@ -13,7 +13,7 @@ takeattendance.innerHTML = `
       <div class="flex flex-wrap justify-center gap-6 p-6 w-full backdrop-blur-lg rounded-lg shadow-lg">
         <!-- Attendance Section -->
         <div class="flex-1 flex flex-col items-start text-[#e0e1dd]" id="attendance-section">
-          <div class="header">
+          <div class="header ">
             <div class="controls">
               <div class="dropdown-container max-sm:text-2xl">
                 <button class="dropdown-button" id="classDropdown">

@@ -51,12 +51,6 @@ navBar.innerHTML = `
                       <span>Add Teacher</span>
                     </a>
                   </li>
-                  <li class="p-3 pl-7  hover:bg-[#0d1b2a] rounded-2xl hover:text-white active:bg-[#415a77]">
-                    <a href="" class="block nav-link" data-target = "">
-                      <i class="fa-solid fa-user-minus pr-3.5  "></i>
-                      <span>Remove Teacher</span>
-                    </a>
-                  </li>
                 </ul>
               </div>
             </li>
@@ -81,12 +75,6 @@ navBar.innerHTML = `
                     <a href="#" class="block nav-link " data-target="add_Student">
                       <i class="fa-solid fa-user-plus pr-3.5 "></i>
                       <span>Add student</span>
-                    </a>
-                  </li>
-                  <li class="p-3 pl-7  hover:bg-[#0d1b2a] rounded-2xl hover:text-white active:bg-[#415a77]">
-                    <a href="" class="block nav-link">
-                       <i class="fa-solid fa-user-minus pr-3.5 "></i>
-                      <span>Remove student</span>
                     </a>
                   </li>
                 </ul>

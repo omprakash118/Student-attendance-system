@@ -1,6 +1,6 @@
 const studentList = document.getElementById("student_list");
 
-studentList.innerHTML = `
+const originalStudentList = `
 <div class="titel h-[7rem] bg-[#e0e1dd] shadow-lg ">
         <div class="title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold  ">
             <h1>Student List</h1>
@@ -9,63 +9,302 @@ studentList.innerHTML = `
 <div class="flex justify-center items-start min-h-screen box-border h-auto m-6  text-lg max-sm:text-xl">
       <div class="w-full max-w-4xl rounded-lg bg-gray-200 p-6 shadow-md ">
         <div class="mb-4 flex items-center justify-between">
-            <input type="text" placeholder="Search..." class="w-1/4 rounded-md border p-2 pt-1.5 pb-1.5 pl-5 text-[1rem] font-bold text-[#0d1b2a]" />
+          <input type="text"  placeholder="Search..." class=" studentSearchSetup w-1/4 rounded-md border p-2 pt-1.5 pb-1.5 pl-5 text-[1rem] font-bold text-[#0d1b2a]" />
         </div>
-    <table class="w-full border-collapse  rounded-[8px] text-[#0d1b2a] text-lg max-sm:text-xl">
+    <table class="studentTable w-full border-collapse  rounded-[8px] text-[#0d1b2a] text-lg max-sm:text-xl">
     <thead class="bg-[#415a77] text-white">
       <tr>
         <th class="p-3 text-left">FIRST</th>
         <th class="p-3 text-left">LAST</th>
         <th class="p-3 text-left">EMAIL</th>
-        <th class="p-3 text-left">MOBILE PHONE</th>
+        <th class="p-3 text-left">CLASS</th>
       </tr>
     </thead>
-    <tbody>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300  transition duration-200 active:scale-97">
-        <td class="p-3">Stive</td>
-        <td class="p-3">Smith</td>
-        <td class="p-3"></td>
-        <td class="p-3"></td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
-        <td class="p-3">Jay</td>
-        <td class="p-3">Mali</td>
-        <td class="p-3"></td>
-        <td class="p-3"></td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97 ">
-        <td class="p-3">Joe</td>
-        <td class="p-3">Root</td>
-        <td class="p-3">joe@gmai.com</td>
-        <td class="p-3">(784) 956-3829</td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
-        <td class="p-3">Josh</td>
-        <td class="p-3">Buttler</td>
-        <td class="p-3"></td>
-        <td class="p-3"></td>
-      </tr>
-      <tr class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97">
-        <td class="p-3">Rohit</td>
-        <td class="p-3">Sharma</td>
-        <td class="p-3">sharma@gmail.com</td>
-        <td class="p-3"></td>
-      </tr>
+    <tbody id="studentListOP">
+      
     </tbody>
   </table>
   <div class="mt-4 flex items-center justify-between">
-    <p class="text-[#8e9baa]">Page <strong>1</strong> of 1 :: <strong>5</strong> students</p>
-    <div class="flex space-x-2">
-      <button class="cursor-pointer rounded-md  px-2 py-1 text-[#8e9baa] hover:bg-gray-200 transition duration-300 active:scale-95 ">«</button>
-      <button class="cursor-pointer rounded-md  px-2 py-1 text-[#8e9baa] hover:bg-gray-200 transition duration-300 active:scale-95 ">‹</button>
-      <button class="rounded-md  cursor-pointer bg-[#778da9] px-3 py-1 text-white">1</button>
-      <button class="cursor-pointer rounded-md  px-2 py-1 text-[#8e9baa] hover:bg-gray-200 transition duration-300 active:scale-95 ">›</button>
-      <button class="cursor-pointer rounded-md  px-2 py-1 text-[#8e9baa] hover:bg-gray-200 transition duration-300 active:scale-95 ">»</button>
+    <p class="text-[#8e9baa]" id="totalStudents"></p>
+    <div class="flex space-x-2" id="paginationStudent">
+
     </div>
   </div>
   </div>
 </div>
 
+
+<div class=" toast-error fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-red-100 bg-red-800 rounded-lg shadow-lg" role="alert">
+  <svg class="w-6 h-6 mr-2 text-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+  </svg>
+  <span class="font-medium">Error to Load student</span>
+</div>
+
 `;
 
+studentList.innerHTML = originalStudentList;
 //  class="bg-gray-100 flex items-center justify-center min-h-screen"
+
+let currentPageStudent = 1;
+const itemsPerPageStudent = 10;
+let allStudent = [];
+
+// for fetching all students
+async function fetchStudents() {
+  try { 
+    const res = await fetch('http://localhost:8000/api/student'); // Replace with your endpoint
+    const { data: students } = await res.json();
+    
+    allStudent = students;
+    
+    const length = students.length;
+
+    document.getElementById("totalStudents").innerHTML = `Total Students: ${length}`; // Display the total number of students
+
+    renderStudentList(currentPageStudent);
+    renderPaginationStudent();
+    setupStudentSearch();
+  }
+  catch (err) {
+    console.error("Error fetching students:", err);
+    alert("Error fetching students. Please try again later.");
+  }
+}
+
+// for fetching only one student details which we needed
+async function showStudentdetails(studentId){ 
+  
+  console.log("button clicked :- ", studentId);
+  try{
+    const res = await fetch(`http://localhost:8000/api/student/${studentId}`);
+    const data = await res.json();
+
+    console.log("Data :- " , data);
+
+    const student = data.data;
+
+    console.log(student);
+    if (!student) throw new Error("Teacher not found");
+    
+  const detailHTML = `
+  <div class="titel h-[7rem] bg-[#e0e1dd] shadow-lg ">
+      <div class="title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold  ">
+          <h1>Student Details</h1>
+      </div>
+  </div>
+  <div class="flex justify-center items-center min-h-[100vh] max-sm:ml-2 max-sm:mr-2  h-auto m-6 text-lg text-[#1b263b]">
+    <div class="h-auto  w-[70%] max-sm:w-full ">
+      <div class="max-w-8xl flex h-auto w-full flex-wrap justify-between gap-6  p-6  backdrop-blur-lg">
+        <div class="w-full max-w-4xl rounded-lg bg-gray-200  p-6 shadow-md  ">
+          <h2 class="p-4  rounded-lg  text-lg max-sm:text-2xl font-semibold bg-[#415a77] text-[#e0e1dd]">Your Information</h2>
+          <div class="w-full max-w-3xl rounded-b-lg bg-gray-200 pt-6 pb-6 text-xl max-sm:text-2xl">
+          <form class="space-y-4">
+          <div>
+              <label class="mb-2 block text-gray-700" for="name">Name</label>
+              <div class="flex space-x-2 max-sm:flex-col max-sm:gap-4">
+                  <input type="text" id="firstNameS" placeholder="josh" class="flex-1 max-sm:flex-col rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77]  focus:outline-none" / disabled value = '${student.Firstname}'>
+                  <input type="text" id="lastNameS" placeholder="prajapat" class="flex-1 max-sm:flex-col rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled  value = '${student.Lastname}'>
+              </div>
+          </div>
+
+          <div>
+              <label class="mb-2 block   text-gray-700" for="groupName">userName</label>
+              <input type="text" id="usernameS" value='${student.username}' class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+
+          <div>
+            <label class="mb-2 block  text-gray-700" for="email">Email</label>
+            <input type="email" id="emailS" value='${student.email}' placeholder="josprajapat@gmail.com" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+          <div>
+            <label class="mb-2 block   text-gray-700" for="mobilePhone">Mobile Phone</label>
+            <input type="tel" id="mobilePhoneS" value='${student.mobilePhone}' class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+
+          <div>
+             <label class="mb-2 block   text-gray-700" for="officePhone">Parents Phone</label>
+             <input type="tel" id="officePhoneS" value='${student.parentsPhone}' class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+          <div>
+              <label class="mb-2 block   text-gray-700">Address</label>
+              <input id="streetS" type="text" value='${student.address?.street}' placeholder="Street" class="mb-2 w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+              <input id="addressLine2S" type="text" value='${student.address?.addressLine2}' placeholder="addressLine2" class="mb-2 w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+              <div class="flex max-sm:flex-col max-sm:gap-2.5 space-x-2">
+                  <input type="text" value='${student.address?.city}' placeholder="City" id="cityS" class="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+                  <div class = " w-full flex justify-center gap-2">
+                      <input type="text" value='${student.address?.state}' placeholder="State" id="stateS" class="focus:ring-[#415a77]focus:outline-none w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none" / disabled>
+                      <input type="text" value='${student.address?.zipCode}' placeholder="Zip Code" id="zipCodeS" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+                  </div>
+              </div>
+          </div>
+
+          <div>
+             <label class="mb-2 block   text-gray-700" for="bioNotes">BioNotes</label>
+             <input type="tel" value='${student.bioNotes}' id="bioNotesD" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+      </form>
+  </div>
+  <div class=" flex justify-center items-center gap-6">
+  <button onclick="loadstudentList()" class="cursor-pointer rounded-md border-none bg-[#415a77] w-full px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">Back</button>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+
+
+    <div class="toast-load fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-green-100 bg-green-800 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-green-700">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <div class="ml-3 text-sm font-medium">Student details loaded successfully</div>
+  </div>
+
+  
+<div class=" toast-error-delete fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-red-100 bg-red-800 rounded-lg shadow-lg" role="alert">
+  <svg class="w-6 h-6 mr-2 text-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+  </svg>
+  <span class="font-medium">Error to delete student</span>
+</div>
+
+
+  `;
+
+  studentList.innerHTML = detailHTML;
+
+  showStudentLoad();
+
+  }catch(err){
+    showStudentError();
+    // alert("Error loading Student details");
+//     console.error(error);
+  }
+}
+
+// This call when we again come to student list
+function loadstudentList(){
+
+  studentList.innerHTML = originalStudentList;
+  
+  fetchStudents();
+}
+
+// this  call fetchStudents first time
+fetchStudents();
+
+// It call when some error acure to load student 
+function showStudentError() {
+  const toast = document.querySelector('.toast-error-delete');
+  toast.classList.remove('hidden');
+  toast.classList.add('flex');
+  // Hide it after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('hidden');
+    toast.classList.remove('flex');
+  }, 3000);
+}
+
+// It call when student details come successfullt
+function showStudentLoad() {
+  const toast = document.querySelector('.toast-load');
+  toast.classList.remove('hidden');
+  toast.classList.add('flex');
+  // Hide it after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('hidden');
+    toast.classList.remove('flex');
+  }, 3000);
+}
+
+function renderStudentList(page) {
+  const studentListOP = document.getElementById("studentListOP");
+  
+  studentListOP.innerHTML = "";
+
+  const startStudent = (page - 1) * itemsPerPageStudent;
+  const endStudent = startStudent + itemsPerPageStudent;
+
+  const pageStudent = allStudent.slice(startStudent, endStudent);
+  pageStudent.forEach(student => {
+    const card = `
+      <tr id="${student._id}" class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97" onclick="showStudentdetails('${student._id}')">
+        <td class="p-3">${student.Firstname}</td>
+        <td class="p-3">${student.Lastname}</td>
+        <td class="p-3">${student.email}</td>
+        <td class="p-3">${student.mobilePhone}</td>
+      </tr>
+    `;
+    studentListOP.innerHTML += card;
+  });
+}
+
+function renderPaginationStudent() {
+  const pagination = document.getElementById("paginationStudent");
+  pagination.innerHTML = "";
+
+  const totalPages = Math.ceil(allStudent.length / itemsPerPageStudent);
+
+  // Previous Button
+  const prevBtn = document.createElement("button");
+  prevBtn.innerText = "Prev";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.className = pageBtnStyleStudent();
+  prevBtn.onclick = () => {
+    currentPage--;
+    renderStudentList(currentPage);
+    renderPaginationStudent();
+  };
+  pagination.appendChild(prevBtn);
+
+  // Page Number Buttons
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    btn.className = pageBtnStyleStudent(i === currentPage);
+    btn.onclick = () => {
+      currentPage = i;
+      renderStudentList(currentPage);
+      renderPaginationStudent();
+    };
+    pagination.appendChild(btn);
+  }
+
+  // Next Button
+  const nextBtn = document.createElement("button");
+  nextBtn.innerText = "Next";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.className = pageBtnStyleStudent();
+  nextBtn.onclick = () => {
+    currentPage++;
+    renderStudentList(currentPage);
+    renderPaginationStudent();
+  };
+  pagination.appendChild(nextBtn);
+}
+
+function pageBtnStyleStudent(active = false) {
+  return `
+    px-3 py-1 rounded-md border border-[#415a77] text-sm font-medium transition-all duration-200 
+    ${active ? 'bg-[#415a77] text-white' : 'bg-white text-[#415a77] hover:bg-gray-200'}
+  `;
+}
+
+
+function setupStudentSearch() {
+  const searchInputSD = document.querySelector('.studentSearchSetup');
+  const rowsSD = document.querySelectorAll('.studentTable tbody tr');
+
+  searchInputSD.addEventListener('input', () => {
+    const searchTermSD = searchInputSD.value.toLowerCase();
+
+    rowsSD.forEach(row => {
+      const name = row.querySelector('td').textContent.toLowerCase();
+      row.style.display = name.includes(searchTermSD) ? '' : 'none';
+    });
+  });
+}

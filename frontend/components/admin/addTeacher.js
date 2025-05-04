@@ -73,6 +73,15 @@ teacherAdding.innerHTML = `
     </div>
   </div>
 </div>
+
+<!-- Toast Notification -->
+<div id="toast-success" class="fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-green-100 bg-green-800 rounded-lg shadow-lg" role="alert">
+  <svg class="w-6 h-6 mr-2 text-green-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+  </svg>
+  <span class="font-medium">Teacher registered successfully!</span>
+</div>
+
 `;
 
 
@@ -136,7 +145,8 @@ document.addEventListener('click', async (e) => {
       throw new Error("Server error: " + errorText);
     }
     const result = await res.json();
-    alert(result.message);
+    showSuccessToast(); 
+    // alert(result.message);
     document.getElementById("addTeacherForm").reset();
   } catch (err) {
     alert("error" , err.message || 'Failed to submit attendance');
@@ -145,5 +155,14 @@ document.addEventListener('click', async (e) => {
 });
 
 
+function showSuccessToast() {
+  const toast = document.getElementById('toast-success');
+  toast.classList.remove('hidden');
+
+  // Hide it after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('hidden');
+  }, 3000);
+}
 
 

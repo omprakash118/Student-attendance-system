@@ -115,7 +115,7 @@
 }
 
 .header {
-    background-color: #0d1b2a;
+    /* background-color: #0d1b2a; */
     padding: 1.5rem 2rem;
     border-bottom: 1px solid #657a92;
 }
@@ -383,6 +383,50 @@
     border: 1px solid #c62828;
 }
 
+
+.toast-load {
+    animation: fadeIn 0.5s, glow 1.5s infinite alternate;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes glow {
+    from { box-shadow: 0 0 5px rgba(34, 197, 94, 0.4); }
+    to { box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); }
+  }
+
+.toast-error {
+    animation: fadeIn 0.5s, glow 1.5s infinite alternate;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes glow {
+    from { box-shadow: 0 0 5px rgba(34, 197, 94, 0.4); }
+    to { box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); }
+  }
+#delete-teacher {
+    animation: fadeIn 0.5s, glow 1.5s infinite alternate;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes glow {
+    from { box-shadow: 0 0 5px rgba(34, 197, 94, 0.4); }
+    to { box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); }
+  }
 
 
 @media (max-width: 768px) {

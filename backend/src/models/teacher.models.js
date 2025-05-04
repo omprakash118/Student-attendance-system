@@ -11,7 +11,6 @@ const addressSchema = new mongoose.Schema({
     zipCode: { type: String, required: true },
 });
 
-
 // Teacher Schema 
 const teacherSchema = new mongoose.Schema({
     Firstname : { 

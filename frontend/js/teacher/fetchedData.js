@@ -15,11 +15,15 @@ async function fetchAdminDetails(teacherId) {
         const response = await fetch(`http://localhost:8000/api/teacher/${teacherId}`);
         const result = await response.json();
 
+        // console.log("result :- ", result);
+
         if (!response.ok) {
             alert(result.message || 'Failed to fetch admin data');
             return;
         }
-        const data = result.data;
+        const data = result.data.teacher;
+
+        // console.log("Data :- ", data)
         // Populate form fields
         document.getElementById('firstName').value = data.Firstname || '';
         document.getElementById('lastName').value = data.Lastname || '';
