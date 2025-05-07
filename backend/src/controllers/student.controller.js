@@ -49,9 +49,21 @@ const deleteStudent = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, {}, "Student deleted successfully"));
 });
 
+const getUnassignedStudents = asyncHandler(async (req, res) => {
+    try {
+      const students = await Student.find({ classAssigned: null }); // empty string means unassigned
+      res.json(students);
+    } catch (error) {
+        console.log("error :- ", error);
+      res.status(500).json({ message: "Failed to fetch unassigned students" });
+    }
+});
+  
+
 module.exports = {
     getAllStudents,
     getStudentById,
     updateStudent,
     deleteStudent,
+    getUnassignedStudents
 };
