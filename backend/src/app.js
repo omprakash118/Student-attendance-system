@@ -23,6 +23,7 @@ const studentRoutes = require('./routes/student.routes.js');
 const teacherRoutes = require('./routes/teacher.routes.js');
 const adminRoutes = require('./routes/admin.routes.js');
 const noticeRoutes = require('./routes/notice.routes.js');
+const messageRoutes = require('./routes/message.routes.js');
 
 app.use('/api/user', userRoutes);
 app.use('/api/attendance', takeAttendanceRoutes);
@@ -31,6 +32,7 @@ app.use('/api/student', studentRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notice', noticeRoutes);
+app.use('/api/message', messageRoutes);
 
 
 app.use((err, req, res, next) => {
