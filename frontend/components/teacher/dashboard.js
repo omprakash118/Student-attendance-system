@@ -10,12 +10,12 @@ dashboard.innerHTML = `
 
   <div class="flex justify-center items-center m-8 max-sm:m-4">
     <div class="w-full max-w-5xl">
-      <div class="flex flex-col gap-8 p-8 max-sm:p-4 w-full backdrop-blur-lg rounded-xl shadow-xl bg-white/90">
+      <div class="flex flex-col gap-8 p-8 max-sm:p-4 w-full backdrop-blur-lg rounded-xl shadow-xl bg-gray-200">
         <!-- Controls -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          <div class="bg-gradient-to-br from-[#415a77] to-[#1b263b] p-6 rounded-lg shadow-lg text-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full ">
+          <div class="bg-gradient-to-br from-[#415a77] to-[#1b263b] p-6 rounded-lg shadow-lg text-[#e0e1dd]">
             <label for="classSelect" class="block mb-3 font-semibold text-lg">Select Class:</label>
-            <select id="classSelect" class="w-full border-0 rounded-md  px-4 py-3 text-[#e0e1dd] font-medium cursor-pointer focus:ring focus:ring-blue-300 transition duration-200">
+            <select id="classSelect" class="w-full border-0 rounded-md pr-6 px-4 py-3 text-[#e0e1dd] font-medium cursor-pointer focus:ring focus:ring-blue-300 transition duration-200">
               <option class="text-black" value="">-- Select --</option>
             </select>
           </div>
@@ -27,7 +27,7 @@ dashboard.innerHTML = `
         </div>
 
         <!-- Chart -->
-        <div class="w-full mt-4 bg-gray-50 p-6 rounded-xl shadow-lg">
+        <div class="w-full mt-4 bg-gray-200 p-6 rounded-xl shadow-lg border-t-4 border-gray-700">
           <h2 class="text-xl font-bold text-gray-700 mb-4">Attendance Overview</h2>
           <div class="relative">
             <canvas id="attendanceChart" class="w-full h-80"></canvas>
@@ -61,20 +61,22 @@ const dateInput = document.getElementById("dateInput");
 let chartInstance = null;
 
 // Load classes into dropdown
+
 async function loadClasses() {
   try {
     const res = await fetch("http://localhost:8000/api/class");
     const result = await res.json();
 
     result.data.forEach((cls) => {
-      const option = document.createElement("option");
-      option.value = cls._id;
-      option.textContent = cls.className;
-      option.classList = "text-black";
-      classSelect.appendChild(option);
-
-      // console.log(cls._id, cls.className);
-      // console.log("Class loaded:", cls);
+      cls.subjects.forEach(subject =>{
+        const option = document.createElement("option");
+        option.value = cls._id;
+        option.textContent = `${cls.className} - ${subject.subjectName}`;
+        option.classList = "text-black classOptions";
+        option.setAttribute('data-subject-id', subject._id);
+        option.setAttribute('data-teacher-id', subject.teacher._id);
+        classSelect.appendChild(option);
+      })   
     });
   } catch (err) {
     console.error("Error loading classes:", err);
@@ -85,27 +87,35 @@ async function loadClasses() {
 // Render the attendance chart
 async function renderChart() {
   const classId = classSelect.value;
+  
   const date = dateInput.value;
-  if (!classId || !date) return;
-  console.log("Class ID:", classId);
-  console.log("Date:", date);
+
+
+  const selectedOption = classSelect.options[classSelect.selectedIndex];
+  const subjectId = selectedOption.dataset.subjectId;
+  const teacherID = selectedOption.dataset.teacherId;
+
+  if (!classId || !date || !subjectId || !teacherID) return;
 
   try {
     const res = await fetch(
-      `http://localhost:8000/api/attendance/get-attendance-by-class?classId=${classId}&date=${date}`
+      `http://localhost:8000/api/attendance/by-class-subject-teacher?classId=${classId}&subjectId=${subjectId}&teacherId=${teacherID}&date=${date}`
     );
 
     const result = await res.json();
 
-    console.log("Attendance data:", result.data);
 
     const attendanceData = result.data?.attendanceData || [];
 
     const present = attendanceData.filter((a) => a.status === "Present").length;
     const absent = attendanceData.filter((a) => a.status === "Absent").length;
 
-    console.log("Present:", present);
-    console.log("Absent:", absent);
+    const totalStudents = present + absent;
+
+    document.getElementById('totalStudentsIn').textContent = totalStudents;
+    document.getElementById('presentStudentsIn').textContent = present;
+    document.getElementById('absentStudentsIn').textContent = absent;
+
     const data = {
       labels: ["Present", "Absent"],
       datasets: [
@@ -159,15 +169,7 @@ async function renderChart() {
   }
 }
 
-classSelect.addEventListener("change", renderChart);
-dateInput.addEventListener("change", renderChart);
 
-// // Initialize
-loadClasses();
-
-
-
-// // Event listeners
 classSelect.addEventListener("change", renderChart);
 dateInput.addEventListener("change", renderChart);
 
