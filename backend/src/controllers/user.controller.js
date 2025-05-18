@@ -221,6 +221,7 @@ const registerStudent = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, username, password, role } = req.body;
 
+    // localStorage.setItem('userRole', role);
     // console.log("login user", req.body);
 
     if (!username && !email) {
@@ -277,6 +278,8 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true
     };
 
+    
+
     return res
         .status(200)
         .cookie("accessToken", tokens.accessToken, options)
@@ -284,11 +287,14 @@ const loginUser = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                { user: loggedInUser, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken , userId: user._id },
+                { user: loggedInUser, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken , userId: user._id , userRole : role},
                 "User logged In Successfully"
             )
         );
 });
+
+
+
 
 // It for logout user
 const logoutUser = asyncHandler(async (req, res) => {
