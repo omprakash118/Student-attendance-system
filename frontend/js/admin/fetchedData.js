@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const adminId = localStorage.getItem('userId'); // Get userId from localStorage
-
     if (!adminId) {
         alert('You are not logged in.');
         window.location.href = '/login.page.html'; // Redirect to login if not logged in
@@ -15,6 +14,7 @@ async function fetchAdminDetails(adminId) {
         const response = await fetch(`http://localhost:8000/api/admin/${adminId}`);
         const result = await response.json();
 
+        
         if (!response.ok) {
             alert(result.message || 'Failed to fetch admin data');
             return;

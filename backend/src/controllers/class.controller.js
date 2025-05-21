@@ -90,6 +90,16 @@ const addStudentToClass = asyncHandler(async (req, res) => {
         $addToSet: { students: studentId }
     });
 
+     // 1. Add student to class (if not already there)
+    // await Classes.findByIdAndUpdate(classId, {
+    //     $addToSet: { students: studentId }
+    // });
+
+    // 2. Assign classId to student
+    await Student.findByIdAndUpdate(studentId, {
+        classAssigned: classId
+    });
+
     const updatedClass = await Classes.findById(classId)
         .populate('subjects.teacher', 'Firstname Lastname')
         .populate('students', 'Firstname Lastname');
@@ -185,6 +195,7 @@ const deleteClass = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Class not found");
     }
 
+    
     return res.status(200).json(new ApiResponse(200, {}, "Class deleted successfully"));
 });
 

@@ -1,129 +1,232 @@
-const messageForm = document.getElementById('messageForm');
 
-messageForm.innerHTML = `
-<div class="titel h-[7rem] bg-[#e0e1dd] shadow-lg ">
-        <div class="title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold  ">
-            <h1>Message</h1>
-        </div>
+/* ----------------------------------------------------------------
+  0. GLOBAL CONFIG
+---------------------------------------------------------------- */
+
+// const API_BASE        = "http://localhost:8000/api"; // adjust if needed
+// const currentUserRole = "admin";                       // ← set dynamically
+
+/* ----------------------------------------------------------------
+  1. BUILD THE FORM MARKUP
+---------------------------------------------------------------- */
+
+const formShell = document.getElementById("messageForm");
+formShell.innerHTML = `
+  <div class="titel h-[7rem] bg-[#e0e1dd] shadow-lg ">
+    <div class="title-name flex items-center h-full pl-20 max-sm:pl-8 text-3xl font-bold">
+      <h1>Message</h1>
     </div>
-<div class="flex justify-center items-start min-h-[100vh]  max-sm:ml-2 max-sm:mr-2 h-auto m-6 text-[#1b263b]">
-    <div class="h-auto  w-[80%] max-sm:w-full  p-10 max-sm:p-4  rounded-2xl ">
-        <div class="mx-auto mt-6 max-w-2xl rounded-lg  bg-gray-200 p-6 shadow-lg">
-            <h2 class="p-4  rounded-lg  text-xl max-sm:text-2xl  bg-[#415a77] text-[#e0e1dd] mb-4">Add Notice</h2>
-            <div class="w-full max-w-3xl rounded-b-lg bg-gray-200 pt-6 pb-6 text-xl  max-sm:text-2xl">
-                <form id="messageForm" class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2" for="recipient">To</label>
-                        <div class="relative">
-                            <select id="recipient"
-                                class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md bg-gray-200 focus:ring-2 focus:ring-[#415a77] focus:outline-none">
-                                <option value="">Please Choose...</option>
-                                <option value="students">Students</option>
-                                <option value="class-students">Class Students</option>
-                                <option value="teacher">Teacher</option>
-                            </select>
-                            <!-- <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            </div> -->
-                        </div>
-                    </div>
+  </div>
 
-                    <div id="studentNameContainer" class="hidden">
-                        <label class="block text-gray-700 font-semibold mb-2" for="studentName">Student Name</label>
-                        <input type="text" id="studentName" placeholder="Enter student name"
-                            class="w-full p-2 border border-gray-300 max-sm:mb-3.5 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" disabled>
-                    </div>
-                    <div id="teacherNameContainer" class="hidden">
-                        <label class="block text-gray-700 font-semibold mb-2" for="studentName">Teacher Name</label>
-                        <input type="text" id="teacherName" placeholder="Enter teacher name"
-                            class="w-full p-2 border border-gray-300 max-sm:mb-3.5 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" disabled>
-                    </div>
+  <div class="flex justify-center items-start min-h-[100vh] mx-4 h-auto m-6 text-[#1b263b]">
+    <div class="w-full max-w-2xl p-6 rounded-2xl">
+      <div class="rounded-lg bg-gray-200 p-6 shadow-lg">
+        <h2 class="mb-4 rounded-lg bg-[#415a77] p-4 text-xl font-semibold text-[#e0e1dd]">Send Message</h2>
 
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2" for="subject">Subject</label>
-                        <input type="text" id="subject" placeholder="Enter message subject"
-                            class="w-full p-2 border border-gray-300 max-sm:mb-3.5 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none">
-                    </div>
+        <form id="sendMessageForm" class="space-y-4">
+          <!-- Recipient ROLE -->
+          <div>
+            <label class="mb-2 block font-semibold text-gray-700" for="recipientRole">Recipient Role</label>
+            <select id="recipientRole" name="recipientRole" required
+                    class="w-full rounded-md border border-gray-300 bg-gray-200 p-2 focus:outline-none focus:ring-2 focus:ring-[#415a77]">
+              <option value="">Please choose…</option>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
 
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2" for="message">Message</label>
-                        <textarea id="message" rows="4" placeholder="Write your message here..."
-                            class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md min-h-[100px] focus:ring-2 focus:ring-[#415a77] focus:outline-none"></textarea>
-                    </div>
+          <!-- Recipient USER (populated dynamically) -->
+          <div id="recipientUserWrap" class="hidden">
+            <label id="recipientUserLabel" class="mb-2 block font-semibold text-gray-700" for="recipientUser">Recipient</label>
+            <select id="recipientUser" name="recipientId" required
+                    class="w-full rounded-md border border-gray-300 bg-gray-200 p-2 focus:outline-none focus:ring-2 focus:ring-[#415a77]">
+              <option value="">Loading…</option>
+            </select>
+          </div>
 
-                    <div class="flex justify-between items-center">
-                        <div class="flex space-x-2">
-                            <button type="button"
-                                class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">
-                                Cancel
-                            </button>
-                            <button type="submit"
-                                class="cursor-pointer rounded-md border-none  bg-[#415a77] px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">
-                                Send Message
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+          <!-- Subject -->
+          <div>
+            <label for="subject" class="mb-2 block font-semibold text-gray-700">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Enter subject"
+                   required
+                   class="w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-[#415a77]" />
+          </div>
+
+          <!-- Message Body -->
+          <div>
+            <label for="messageBody" class="mb-2 block font-semibold text-gray-700">Message</label>
+            <textarea id="messageBody" name="messageBody" rows="4" placeholder="Write your message here…"
+                      required
+                      class="w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-[#415a77]"></textarea>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex justify-end space-x-2 pt-2">
+            <button type="reset" class="rounded-md cursor-pointer bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600">Cancel</button>
+            <button type="submit" class="rounded-md cursor-pointer bg-[#415a77] px-4 py-2 text-white transition hover:bg-[#1b263b]">Send</button>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
-`;
+  </div>
 
-document.getElementById('recipient').addEventListener('change', function () {
-    const studentNameContainer = document.getElementById('studentNameContainer');
-    const studentNameInput = document.getElementById('studentName');
-    const teacherNameContainer = document.getElementById('teacherNameContainer');
-    const teacherNameInput = document.getElementById('teacherName');
+  <!-- Toasts -->
+  <div class="toast toast-message-success hidden fixed bottom-5 right-5  items-center max-w-xs rounded-lg bg-green-800 p-4 text-green-100 shadow-lg">
+    <svg class="mr-2 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+    <span class="font-medium">Message sent successfully!</span>
+  </div>
 
-    // Show/hide and enable/disable student name input based on selection
-    if (this.value === 'students' || this.value === 'class-students') {
-        studentNameContainer.classList.remove('hidden');
-        studentNameInput.disabled = false;
-    } else {
-        studentNameContainer.classList.add('hidden');
-        studentNameInput.disabled = true;
-        studentNameInput.value = ''; // Clear the input
-    }
+  <div class="toast toast-message-error hidden fixed bottom-5 right-5  items-center max-w-xs rounded-lg bg-red-800 p-4 text-red-100 shadow-lg">
+    <svg class="mr-2 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+    <span class="font-medium">Failed to send message!</span>
+  </div>
+  `;
 
-    if(this.value === 'teacher'){
-        teacherNameContainer.classList.remove('hidden');
-        teacherNameInput.disabled = false;
-    }
-    else{
-        studentNameContainer.classList.add('hidden');
-        studentNameInput.disabled = true;
-        studentNameInput.value = '';
-    }
+/* ----------------------------------------------------------------
+  2. DATA CACHES
+---------------------------------------------------------------- */
+
+const cache = {
+  student: [],
+  teacher: [],
+  admin:   [] // optional — depends on your API
+};
+
+/* ----------------------------------------------------------------
+  3. DOM NODES
+---------------------------------------------------------------- */
+
+const roleSelect      = document.getElementById("recipientRole");
+const userWrap        = document.getElementById("recipientUserWrap");
+const userSelect      = document.getElementById("recipientUser");
+const userLabel       = document.getElementById("recipientUserLabel");
+const sendMessageForm = document.getElementById("sendMessageForm");
+
+/* ----------------------------------------------------------------
+  4. HELPERS
+---------------------------------------------------------------- */
+
+function showToastMessage(id) {
+  const t = document.querySelector(id);
+  t.classList.remove("hidden");
+  t.classList.add("flex");
+  setTimeout(() => {
+    t.classList.add("hidden");
+    t.classList.remove("flex");
+
+  }, 3000);
+}
+
+function optionTemplate({ _id, Firstname, Lastname, username }) {
+  const name = Firstname ? `${Firstname} ${Lastname ?? ""}`.trim() : username;
+  return `<option value="${_id}">${name}</option>`;
+}
+
+async function fetchUsers(role) {
+  if (cache[role]?.length) return cache[role]; // already cached
+  try {
+    const res = await fetch(`${API_BASE}/${role}`);
+    const { data } = await res.json();
+    cache[role] = data;
+    return data;
+  } catch (err) {
+    console.error(`Error fetching ${role}s:`, err);
+    showToast("toast-error");
+    return [];
+  }
+}
+
+async function populateRecipientList(role) {
+  // Hide container until we load
+  userWrap.classList.add("hidden");
+  userSelect.innerHTML = "<option value>Loading…</option>";
+
+  const list = await fetchUsers(role);
+  if (!list.length) {
+    userSelect.innerHTML = "<option value>— No users available —</option>";
+    return;
+  }
+
+  userSelect.innerHTML = list.map(optionTemplate).join("\n");
+  userLabel.textContent = role.charAt(0).toUpperCase() + role.slice(1) + " Name";
+  userWrap.classList.remove("hidden");
+}
+
+/* ----------------------------------------------------------------
+  5. EVENT LISTENERS
+---------------------------------------------------------------- */
+
+roleSelect.addEventListener("change", e => {
+  const role = e.target.value;
+  if (!role) {
+    userWrap.classList.add("hidden");
+    return;
+  }
+  populateRecipientList(role);
 });
 
-// Optional: Form submission handling
-document.getElementById('messageForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const recipient = document.getElementById('recipient').value;
-    const studentName = document.getElementById('studentName').value;
-    const teacherName = document.getElementById('teacherName').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
+sendMessageForm.addEventListener("submit", async e => {
+  e.preventDefault();
 
-    // Basic validation
-    if (recipient === '') {
-        alert('Please select a recipient');
-        return;
-    }
+  // Basic validation (recipient role already required)
+  const recipientRole = roleSelect.value;
+  const recipientId   = userSelect.value;
+  const recipientName = userSelect.options[userSelect.selectedIndex].text;
+  const senderName   = localStorage.getItem('userName'); // replace with actual sender name
 
-    if ((recipient === 'students' || recipient === 'class-students' || recipient === 'teacher') && studentName.trim() === '' && teacherName.trim() === '') {
-        alert('Please enter a name');
-        return;
-    }
 
-    // Here you would typically send the message via an API
-    console.log('Sending message:', {
-        recipient,
-        studentName,
-        teacherName,
-        subject,
-        message
+  console.log("Recipient Name:", recipientName);
+  console.log("Sender Name:", senderName);
+  if (!recipientId) {
+    alert("Please choose a recipient.");
+    return;
+  }
+
+  const payload = {
+    senderName,     // optional
+    senderId:       currentUserId, // replace with actual user ID
+    senderRole:     currentUserRole,
+    recipientName,  // optional
+    recipientRole,  // student | teacher | admin
+    recipientId,    // Mongo _id
+    subject:        e.target.subject.value.trim(),
+    messageBody:    e.target.messageBody.value.trim()
+  };
+
+  console.log("Sending message:", payload);
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/message/send`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
 
-    alert('Message prepared for sending!');
+    console.log("Response:", res);
+    if (!res.ok) throw new Error("Network response was not ok");
+
+    // success
+    showToastMessage(".toast-message-success");
+    sendMessageForm.reset();
+    userWrap.classList.add("hidden");
+
+  } catch (err) {
+    console.error("Error sending message:", err);
+    showToast(".toast-message-error");
+  }
 });
+
+/* ----------------------------------------------------------------
+  6. INITIALISATION
+---------------------------------------------------------------- */
+// nothing to do until user picks a role, but you can preload caches:
+Promise.all([
+  fetchUsers("student"),
+  fetchUsers("teacher")
+  // fetchUsers("admin") // uncomment if you have an admin endpoint
+]);

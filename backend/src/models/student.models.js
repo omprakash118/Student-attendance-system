@@ -53,8 +53,9 @@ const studentSchema = new mongoose.Schema({
         required : true
     },
     classAssigned : { 
-        type : String , 
-        required : true
+        type: mongoose.Schema.Types.ObjectId, 
+        ref : 'Classes',
+        default: null
     },
     bioNotes: { 
         type: String, 

@@ -51,6 +51,7 @@ notice.innerHTML = `
 
 const noticeContainer = document.querySelector('#notice-container'); // Your parent div
 const deletNotice = document.getElementById('delete-Notice');
+
 async function fetchNotices(isReset) {
   try {
     const res = await fetch('http://localhost:8000/api/notice'); // Replace with your endpoint
@@ -94,6 +95,7 @@ async function fetchNotices(isReset) {
     console.error('Error fetching notices:', err);
   }
 }
+
 fetchNotices(0);
 
 // document.addEventListener("click", async function (e) {
@@ -140,12 +142,14 @@ document.addEventListener("click", async function (e) {
 
     // Show the modal
     deletNotice.classList.remove("hidden");
+    deletNotice.classList.add("flex");
   }
 });
 
 // Handle Cancel Button
 document.getElementById("cancel-delete-btn").addEventListener("click", () => {
   deletNotice.classList.add("hidden");
+  deletNotice.classList.remove("flex");
   selectedNoticeId = null;
 });
 
@@ -164,6 +168,7 @@ document.getElementById("confirm-delete-btn").addEventListener("click", async ()
       if (noticeCard) noticeCard.remove();
 
       deletNotice.classList.add("hidden");
+      deletNotice.classList.remove("flex");
       selectedNoticeId = null;
 
       // Optional toast or alert

@@ -27,8 +27,11 @@ const updateStudent = asyncHandler(async (req, res) => {
     const { studentId } = req.params;
     const updateData = req.body;
 
+    console.log("Update Data: ", updateData);
+
     const updatedStudent = await Student.findByIdAndUpdate(studentId, updateData, { new: true }).select("-password -refreshToken");
 
+    console.log("Updated Student: ", updatedStudent);
     if (!updatedStudent) {
         throw new ApiError(404, "Student not found or update failed");
     }

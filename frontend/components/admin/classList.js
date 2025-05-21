@@ -72,7 +72,7 @@ async function fetchClasses(){
 
         // const classes = data.data;
         allClasses = classes;
-        console.log("Classes :- ", allClasses);
+        // console.log("Classes :- ", allClasses);
 
         const length = classes.length;
 
@@ -91,18 +91,13 @@ fetchClasses();
 
 
 async function showClassDetails(classId) {
-    console.log("Class clicked: ", classId);
+    // console.log("Class clicked: ", classId);
     try {
       const res = await fetch(`http://localhost:8000/api/class/${classId}`);
       const data = await res.json();
       const classData = data.data;
   
       if (!classData) throw new Error("Class not found");
-  
-    //   let subjectsHTML = classData.subjects.length > 0
-    //     ? classData.subjects.map((sub, index) => `<li class="ml-4 list-disc">${sub.subjectName}</li>`).join('')
-    //     : '<p class="text-gray-500 ml-4">No subjects assigned</p>';
-  
 
     
 // Helper function inside showClassDetails
@@ -178,7 +173,14 @@ async function showClassDetails(classId) {
             </div>
   
             <div class="mb-6">
-              <h3 class="text-xl font-semibold">Students:</h3>
+              <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold">Students:</h3>
+                <div class="flex justify-end mb-2">
+                  <button onclick="openAssignStudentModal('${classData._id}')" class="cursor-pointer rounded-md border-none bg-[#415a77] w-full px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">
+                    + Assign Existing Student
+                  </button>
+                </div>
+              </div>
               <div>${studentsHTML}</div>
             </div>
   
@@ -190,6 +192,22 @@ async function showClassDetails(classId) {
             </div>
           </div>
         </div>
+
+<div id="assignStudentModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 items-center justify-center">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+    <h2 class="text-xl font-bold mb-4 text-center">Assign Student to Class</h2>
+
+    <select id="studentSelect" class="w-full p-2 border border-gray-300 rounded mb-4">
+      <option disabled selected value="">-- Select Student --</option>
+      <!-- Students will be populated dynamically -->
+    </select>
+
+    <div class="flex justify-end gap-4">
+      <button onclick="closeAssignStudentModal()" class="cursor-pointer rounded-md border-none bg-gray-600 w-full px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-gray-100 hover:text-gray-700 active:scale-95 active:bg-gray-500">Cancel</button>
+      <button onclick="assignSelectedStudent()" class=" cursor-pointer rounded-md border-none bg-[#415a77] w-full px-4 py-2 text-[#e0e1dd] transition duration-300 hover:bg-[#778da944] hover:text-[#0d1b2a] active:scale-95 active:bg-[#415a77]">Assign</button>
+    </div>
+  </div>
+</div>
 
         
 <div id="delete-class" class="fixed inset-0 bg-[#000000cf]  bg-opacity-50 hidden items-center justify-center p-4 z-50">
@@ -206,10 +224,10 @@ async function showClassDetails(classId) {
                 <p class="text-gray-500 text-center">Are you sure you want to delete this Class? This action cannot be undone.</p>
             </div>
             <div class="bg-gray-50 px-6 py-4 flex justify-center gap-3 rounded-lg shadow-lg">
-                <button id="cancel-delete-btnC" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+                <button id="cancel-delete-btnC" class="px-4 py-2 cursor-pointer border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
                     Cancel
                 </button>
-                <button id="confirm-delete-btnC" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <button id="confirm-delete-btnC" class="px-4 py-2 bg-red-600 cursor-pointer text-white rounded-lg hover:bg-red-700">
                     Delete
                 </button>
             </div>
@@ -228,6 +246,7 @@ async function showClassDetails(classId) {
           </div>
           <div class="ml-3 text-sm font-medium">Class details loaded successfully</div>
         </div>
+
 
         <!-- Class Student Details -->
         <div id="ClassStudentDetails" class="fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 hidden"></div>
@@ -256,9 +275,9 @@ function loadclassList(){
 }
 
 function deleteClassData(classId){
-    console.log("Classdetails :- ", classId);
+    // console.log("Classdetails :- ", classId);
 
-    const modalC = document.getElementById("delete-class");
+  const modalC = document.getElementById("delete-class");
   const cancelBtn = document.getElementById("cancel-delete-btnC");
   const confirmBtn = document.getElementById("confirm-delete-btnC");
 
@@ -274,8 +293,8 @@ function deleteClassData(classId){
 
   document.body.style.overflow = "hidden";
 
-  console.log("newCanclBtn :- ", newCancelBtn);
-  console.log("newConfirmBtn :- ", newConfirmBtn);
+  // console.log("newCanclBtn :- ", newCancelBtn);
+  // console.log("newConfirmBtn :- ", newConfirmBtn);
   
   // Cancel button hides the modal
   newCancelBtn.addEventListener("click", () => {
@@ -298,27 +317,96 @@ function deleteClassData(classId){
       modalC.classList.remove("flex");
       document.body.style.overflow = "";
 
+      loadclassList(); // reload the CLass list
       showClassDelete(); 
 
-      loadclassList(); // reload the CLass list
+      
     } catch (err) {
-      // console.error(err);
-      showStudentError() ;
-      // alert("Error deleting teacher");
+      console.error(err);
+
+      alert("Error deleting teacher");
     }
   });
 }
 
-function showClassError(){
-    const toast = document.querySelector('.toast-error-delete');
-    toast.classList.remove('hidden');
-    toast.classList.add('flex');
-    // Hide it after 3 seconds
-    setTimeout(() => {
-      toast.classList.add('hidden');
-      toast.classList.remove('flex');
-    }, 3000);
+
+
+let selectedClassId = null;
+
+function openAssignStudentModal(classId) {
+  selectedClassId = classId;
+  document.getElementById("assignStudentModal").classList.remove("hidden");
+  document.getElementById("assignStudentModal").classList.add("flex");
+
+  // Load unassigned students
+  
+  fetch('http://localhost:8000/api/student/getUnassignedStudents')  // You must create this route
+    .then(res => res.json())
+    .then(data => {
+      const select = document.getElementById("studentSelect");
+      select.innerHTML = `<option disabled selected value="">-- Select Student --</option>`;
+      console.log("data :- ", data);
+      data.forEach(student => {
+        const option = document.createElement("option");
+        option.value = student._id;
+        option.textContent = `${student.Firstname} ${student.Lastname}`;
+        select.appendChild(option);
+      });
+    })
+    .catch(err => console.error('Error loading students:', err));
 }
+
+function closeAssignStudentModal() {
+  const assignStudentModal = document.getElementById("assignStudentModal");
+  assignStudentModal.classList.add("hidden");
+  assignStudentModal.classList.remove("flex");
+  selectedClassId = null;
+}
+
+function assignSelectedStudent() {
+  const studentId = document.getElementById("studentSelect").value;
+  if (!studentId || !selectedClassId) return alert("Please select a student.");
+
+  console.log("Assigning student:", studentId);
+
+  fetch('http://localhost:8000/api/class/add-student', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ studentId, classId: selectedClassId })
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert("✅ Student assigned successfully!");
+      closeAssignStudentModal();
+      // Optionally refresh the class view
+    })
+    .catch(err => console.error('Assign failed:', err));
+}
+
+
+async function addStudentToClass(studentId, classId) {
+  try {
+    const res = await fetch('/api/class/add-student', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentId, classId })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('✅ Student added to class successfully');
+      // Optionally reload the class details here
+      // loadClassDetails(classId);
+    } else {
+      alert(`❌ Error: ${data.message}`);
+    }
+  } catch (error) {
+    console.error("Failed to add student:", error);
+  }
+}
+
+
 
 function showClassLoad(){
     const toast = document.querySelector('.toast-class-load');
@@ -341,7 +429,7 @@ function renderClassList(page){
 
     const pageClass = allClasses.slice(startClass, endClass);
 
-    console.log("PageCLass :- ", pageClass);
+    // console.log("PageCLass :- ", pageClass);
     pageClass.forEach(classp => {
     const card = `
       <tr id="${classp._id}" class="border-b border-[#415a77]  cursor-pointer hover:bg-gray-300 transition duration-200 active:scale-97" onclick="showClassDetails('${classp._id}')">
@@ -421,13 +509,14 @@ function setupClassSearch(){
 }
 
 function showClassDelete(){
-    const toast = document.querySelector('.toast-class-delete');
-  toast.classList.remove('hidden');
-  toast.classList.add('flex');
+    const toastDE = document.querySelector('.toast-class-delete');
+    console.log("toastDE :- ", toastDE);
+  toastDE.classList.remove('hidden');
+  toastDE.classList.add('flex');
   // Hide it after 3 seconds
   setTimeout(() => {
-    toast.classList.add('hidden');
-    toast.classList.remove('flex');
+    toastDE.classList.add('hidden');
+    toastDE.classList.remove('flex');
   }, 3000);
 }
 

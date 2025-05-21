@@ -20,6 +20,17 @@ async function fetchAdminDetails(studentId) {
             return;
         }
         const data = result.data;
+
+        let className = '' ; 
+
+        if(data.classAssigned){
+          const classRes = await fetch(`http://localhost:8000/api/class/${data.classAssigned}`);
+          const classData = await classRes.json();
+          className = classData.data.className;
+          console.log("className :- ", className);
+        }else{  
+          className = "Not Assigned";
+        }
         // Populate form fields
         document.getElementById('firstName').value = data.Firstname || '';
         document.getElementById('lastName').value = data.Lastname || '';
@@ -27,7 +38,7 @@ async function fetchAdminDetails(studentId) {
         document.getElementById('email').value = data.email || '';
         document.getElementById('mobilePhone').value = data.mobilePhone || '';
         document.getElementById('parentsPhone').value = data.parentsPhone || '';
-        document.getElementById('classAssigned').value = data.classAssigned || '';
+        document.getElementById('classAssigned').value = className || '';
         document.getElementById('bioNotes').value = data.bioNotes || '';
 
         document.getElementById('logname').textContent = data.Firstname || ''; // Set the logged-in username in the header
@@ -42,7 +53,7 @@ async function fetchAdminDetails(studentId) {
         document.getElementById('state').value = address.state || '';
         document.getElementById('zipCode').value = address.zipCode || '';
     } catch (error) {
-        console.error('Error fetching admin details:', error);
-        alert('Error fetching admin details.');
+        console.error('Error fetching student details:', error);
+        alert('Error fetching student details.');
     }
 }

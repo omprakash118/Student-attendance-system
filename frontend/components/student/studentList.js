@@ -87,6 +87,19 @@ async function showStudentdetails(studentId){
     console.log(student);
     if (!student) throw new Error("Teacher not found");
     
+
+    let className = '' ; 
+
+    if(student.classAssigned){
+      const classRes = await fetch(`http://localhost:8000/api/class/${student.classAssigned}`);
+      const classData = await classRes.json();
+      className = classData.data.className;
+      console.log("className :- ", className);
+    }else{  
+      className = "Not Assigned";
+    }
+
+
   const detailHTML = `
   <div class="titel h-[7rem] bg-[#e0e1dd] shadow-lg ">
       <div class="title-name flex justify-items-start items-center h-[100%] pl-[5rem] max-sm:pl-[2rem] text-3xl font-bold  ">
@@ -125,6 +138,10 @@ async function showStudentdetails(studentId){
           <div>
              <label class="mb-2 block   text-gray-700" for="officePhone">Parents Phone</label>
              <input type="tel" id="officePhoneS" value='${student.parentsPhone}' class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+          <div>
+             <label class="mb-2 block   text-gray-700" for="officePhone">classAssigned</label>
+             <input type="tel" id="officePhoneS" value='${className}' class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
           </div>
           <div>
               <label class="mb-2 block   text-gray-700">Address</label>

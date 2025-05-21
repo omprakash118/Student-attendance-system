@@ -29,16 +29,12 @@ studentAdding.innerHTML = `
                   </div>
                   <div>
                     <label class="block text-gray-700 max-sm:mb-3.5">Password</label>
-                    <input id="passwordS" type="text" class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" placeholder="Password">
+                    <input id="passwordS" type="password" class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" placeholder="Password">
                   </div>
                   <div class="md:col-span-2">
                       <label class="block text-gray-700 max-sm:mb-3.5">Class</label>
                       <select id="classAssignedS" class="w-full p-2 border border-gray-300 max-sm:mb-4 rounded-md focus:ring-2 focus:ring-[#415a77] focus:outline-none" required>
-                        <option value="">Select Class</option>
-                        <option value="9">Class 9</option>
-                        <option value="10">Class 10</option>
-                        <option value="11">Class 11</option>
-                        <option value="12">Class 12</option>
+                        <option value=''>Select Class</option>
                     </select>
                   </div>
 
@@ -81,7 +77,7 @@ studentAdding.innerHTML = `
 
     
 <!-- Toast Notification -->
-<div id="toast-success" class="fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-green-100 bg-green-800 rounded-lg shadow-lg" role="alert">
+<div id="toast-success-addStudent" class="fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-green-100 bg-green-800 rounded-lg shadow-lg" role="alert">
   <svg class="w-6 h-6 mr-2 text-green-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
   </svg>
@@ -105,7 +101,7 @@ document.addEventListener('click', async (e) => {
   const emailS = document.getElementById('emailS').value;
   const mobilePhoneS = document.getElementById('mobilePhoneS').value;
   const parentPhoneS = document.getElementById('parentPhoneS').value;
-  const classAssignedS = document.getElementById('classAssignedS').value;
+  const classAssignedS = document.getElementById('classAssignedS').value || null;
   const streetS = document.getElementById('streetS').value;
   const line2S = document.getElementById('line2S').value;
   const cityS = document.getElementById('cityS').value;
@@ -113,7 +109,7 @@ document.addEventListener('click', async (e) => {
   const zipS = document.getElementById('zipS').value;
   const bioNotesS = document.getElementById('bioNotesS').value || '';
 
-  if (!FirstnameS || !LastnameS || !usernameS || !passwordS || !emailS || !mobilePhoneS || !parentPhoneS || !classAssignedS || !streetS || !cityS || !stateS || !zipS) {
+  if (!FirstnameS || !LastnameS || !usernameS || !passwordS || !emailS || !mobilePhoneS || !parentPhoneS || !streetS || !cityS || !stateS || !zipS) {
     alert("All fields are required.");
     return;
   }
@@ -151,8 +147,31 @@ document.addEventListener('click', async (e) => {
       throw new Error("Server error: " + errorText);
     }
     const result = await res.json();
-    showSuccessToast(); 
-    // alert(result.message);
+    console.log("Result received:", result);
+
+    if (result.data.classAssigned !== null) {
+
+      const studentID = result.data._id;
+      const classID = result.data.classAssigned;
+      console.log("Student ID:", studentID);
+      console.log("Class ID:", classID);
+
+      fetch('http://localhost:8000/api/class/add-student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId : studentID, classId: classID })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Student assigned to class:', data);
+        // Optionally refresh the class view
+      })
+      .catch(err => console.error('Assign failed:', err));
+
+    }
+
+    showSuccessToastaddstu(); 
+    // alert(result.message); 
     document.getElementById("addStudentForm").reset();
   } catch (err) {
     alert("error" , err.message || 'Failed to submit attendance');
@@ -161,8 +180,8 @@ document.addEventListener('click', async (e) => {
 });
 
 
-function showSuccessToast() {
-  const toast = document.getElementById('toast-success');
+function showSuccessToastaddstu() {
+  const toast = document.getElementById('toast-success-addStudent');
   toast.classList.remove('hidden');
 
   // Hide it after 3 seconds
@@ -170,3 +189,27 @@ function showSuccessToast() {
     toast.classList.add('hidden');
   }, 3000);
 }
+
+document.addEventListener('DOMContentLoaded', async () => { 
+  try {
+    const res = await fetch("http://localhost:8000/api/class"); 
+
+    const { data : classes } = await res.json();
+    
+    console.log("Classes fetched:", classes);
+
+    classes.forEach((classItem) => {
+
+      const option = document.createElement("option");
+      option.value = classItem._id; 
+      option.textContent = classItem.className;
+      document.getElementById("classAssignedS").appendChild(option); 
+      
+      console.log("Option created:", option);
+    });
+
+
+  } catch (error) {
+    console.error("Error fetching classes:", error);
+  }
+});

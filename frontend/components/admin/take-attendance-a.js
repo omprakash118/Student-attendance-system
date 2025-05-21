@@ -56,6 +56,15 @@ takeattendance.innerHTML = `
   </svg>
   <span class="font-medium">Attendance registered successfully!</span>
 </div>
+
+<div id="toast-alert" class="fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-yellow-100 bg-yellow-800 rounded-lg shadow-lg" role="alert">
+  <i class="fa-solid fa-triangle-exclamation w-6 h-6 mr-2  text-yellow-100" ></i>
+  <span class="font-medium">Attendance already marked for this class, subject, teacher, and date.</span>
+</div>
+<div id="toast-error" class="fixed bottom-5 right-5 hidden items-center w-full max-w-xs p-4 text-red-100 bg-red-800 rounded-lg shadow-lg" role="alert">
+  <i class="fa-solid fa-bug w-6 h-6 mr-2  text-red-100" ></i>
+  <span class="font-medium">Please select class and date.</span>
+</div>
 `;
 
 // ---------------------- Setup Class Dropdown ----------------------
@@ -69,22 +78,31 @@ async function loadClasses() {
       const menu = document.getElementById('classMenu');
       menu.innerHTML = '';
 
-      // console.log(menu); // Debugging line to check the dropdown menu element
-  
       classes.forEach(cls => {
-        const div = document.createElement('div');
-        div.className = 'dropdown-item';
-        div.setAttribute('data-value', cls._id);
-        div.textContent = `${cls.className} - ${cls.subject}`;
-        div.addEventListener('click', async () => {
-          document.getElementById('selectedClass').textContent = div.textContent;
-          document.getElementById('classDropdown').setAttribute('data-class-id', cls._id);
-          document.getElementById('classDropdown').setAttribute('data-teacher-id', cls.teacher._id);
-          await fetchAndRenderStudents(cls._id);
+        cls.subjects.forEach(subject => {
+          const div = document.createElement('div');
+          div.className = 'dropdown-item';
+          div.setAttribute('data-class-id', cls._id);
+          div.setAttribute('data-subject-id', subject._id); // If needed
+          
+
+
+          div.setAttribute('data-teacher-id', subject.teacher._id); // ✅ Correct
+      
+          div.textContent = `${cls.className} - ${subject.subjectName}`;
+          div.addEventListener('click', async () => {
+            document.getElementById('selectedClass').textContent = div.textContent;
+            document.getElementById('classDropdown').setAttribute('data-class-id', cls._id);
+            document.getElementById('classDropdown').setAttribute('data-teacher-id', subject.teacher._id);
+            document.getElementById("classDropdown").setAttribute('data-subject-id', subject._id);
+            await fetchAndRenderStudents(cls._id);
+          });
+      
+          menu.appendChild(div);
         });
-        menu.appendChild(div);
-        // console.log(div); // Debugging line to check the dropdown items
       });
+      
+      
     } catch (err) {
       console.error(err);
       alert("Failed to load classes");
@@ -92,9 +110,15 @@ async function loadClasses() {
   }
   
 // ---------------------- Load Existing Attendance ----------------------
-async function loadExistingAttendance(classId, date) {
+async function loadExistingAttendance(classId, subjectId, teacherId, date) {
+
+
+
   try {
-    const res = await fetch(`http://localhost:8000/api/get-attendance-by-class?classId=${classId}&date=${date}`);
+    const res = await fetch(
+      `http://localhost:8000/api/attendance/by-class-subject-teacher?classId=${classId}&subjectId=${subjectId}&teacherId=${teacherId}&date=${date}`
+    );
+
     const result = await res.json();
     return result.data || null;
   } catch (err) {
@@ -103,27 +127,41 @@ async function loadExistingAttendance(classId, date) {
   }
 }
 
-// ---------------------- Fetch and Render Students ----------------------
+
 async function fetchAndRenderStudents(classId) {
   const date = document.getElementById('attendanceDate').value;
+  console.log("attendance DAte :- ", document.getElementById("attendanceDate"));
   const tbody = document.querySelector('.attendance-table tbody');
   tbody.innerHTML = '<tr><td colspan="2">Loading...</td></tr>';
 
   try {
     const res = await fetch(`http://localhost:8000/api/class/${classId}`);
     const result = await res.json();
-    const students = result.data.students;
-    const teacherId = result.data.teacher._id;
+    const classData = result.data;
 
-    document.getElementById('classDropdown').setAttribute('data-class-id', classId);
-    document.getElementById('classDropdown').setAttribute('data-teacher-id', teacherId);
+    console.log("ClassData 176:- ", classData);
 
-    const existingAttendance = await loadExistingAttendance(classId, date);
+    const subjectId = document.getElementById('classDropdown').getAttribute('data-subject-id');
+    const teacherId = document.getElementById('classDropdown').getAttribute('data-teacher-id');
+
+    console.log("SubjectID 181:- ", subjectId);
+    console.log("TeacherID 182:- ", teacherId);
+    console.log("date :- ", date);
+    const students = classData.students || [];
+
+    console.log("Students 185:- ", students);
+
+    // Load existing attendance
+    const existingAttendance = await loadExistingAttendance(classId, subjectId, teacherId, date);
+
+    console.log("existingAttendance 190:- ", existingAttendance);
     const attendanceMap = existingAttendance
       ? Object.fromEntries(
           existingAttendance.attendanceData.map(item => [item.studentId._id, item.status])
         )
       : {};
+
+      // console.log("attendanceMap :- ", attendanceMap);
 
     tbody.innerHTML = '';
     students.forEach(s => {
@@ -148,6 +186,8 @@ async function fetchAndRenderStudents(classId) {
     console.error(err);
   }
 }
+
+
 
 // ---------------------- Status Buttons ----------------------
 function setupStatusButtons() {
@@ -181,9 +221,26 @@ function setupSearch() {
 document.addEventListener('click', async (e) => {
   if (!e.target.classList.contains('save-button')) return;
 
-  const classId = document.getElementById('classDropdown').getAttribute('data-class-id');
-  const teacherId = document.getElementById('classDropdown').getAttribute('data-teacher-id');
+  const dropdown = document.getElementById('classDropdown');
+  const classId = dropdown.getAttribute('data-class-id');
+  const teacherId = dropdown.getAttribute('data-teacher-id');
+  const subjectId = dropdown.getAttribute('data-subject-id');
   const date = document.getElementById('attendanceDate').value;
+
+
+  if(!classId || !subjectId || !teacherId || !date){
+    showErrorToast();
+    return;
+  }
+
+  const existingAttendance = await loadExistingAttendance(classId, subjectId, teacherId, date);
+  if (existingAttendance) {
+    // alert('⚠ Attendance already marked for this class, subject, teacher, and date.');
+    showAlertToast();
+    return; // Stop if already exists
+  }
+
+
 
   const attendanceData = Array.from(document.querySelectorAll('.status-buttons')).map(btnGroup => {
     const studentId = btnGroup.dataset.studentId;
@@ -191,7 +248,9 @@ document.addEventListener('click', async (e) => {
     return { studentId, status };
   });
 
-  const payload = { classId, teacherId, date, attendanceData };
+  const payload = { classId, teacherId, subjectId, date, attendanceData };
+
+  // console.log("payload :- ", payload);
 
   try {
     const res = await fetch('http://localhost:8000/api/attendance/take-attendance', {
@@ -200,6 +259,9 @@ document.addEventListener('click', async (e) => {
       body: JSON.stringify(payload)
     });
     const result = await res.json();
+
+    // console.log("result :- ", result);
+
     showSuccessToast();
   } catch (err) {
     alert("Failed to submit attendance");
@@ -246,9 +308,41 @@ document.addEventListener('click', (e) => {
   function showSuccessToast() {
     const toast = document.getElementById('toast-success');
     toast.classList.remove('hidden');
+    toast.classList.add('flex');
   
     // Hide it after 3 seconds
     setTimeout(() => {
       toast.classList.add('hidden');
+      toast.classList.remove('flex');
     }, 3000);
   }
+  function showAlertToast() {
+    const toast = document.getElementById('toast-alert');
+    toast.classList.remove('hidden');
+    toast.classList.add('flex');
+  
+    // Hide it after 3 seconds
+    setTimeout(() => {
+      toast.classList.add('hidden');
+      toast.classList.remove('flex');
+    }, 3000);
+  }
+  function showErrorToast() {
+    const toast = document.getElementById('toast-error');
+    toast.classList.remove('hidden');
+    toast.classList.add('flex');
+  
+    // Hide it after 3 seconds
+    setTimeout(() => {
+      toast.classList.add('hidden');
+      toast.classList.remove('flex');
+    }, 3000);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const dateInput = document.getElementById("attendanceDate");
+    dateInput.addEventListener("change", () => {
+      console.log(dateInput.value); // Should now show selected value
+    });
+  });
+  

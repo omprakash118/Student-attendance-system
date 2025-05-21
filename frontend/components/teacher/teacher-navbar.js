@@ -67,18 +67,11 @@ navBar.innerHTML = `
             
             <li class="text-[#737b85] pt-7 pb-3 pl-1.5 labeled">Personal</li>
             
-            <li class="p-3 pl-7 hover:bg-[#1b263b] hover:rounded-2xl  hover:text-white active:bg-[#415a77]">
-              <div class="hidden">
-                <i class="fa-solid fa-gear"></i>
-              </div>
-              <a href="" class="block btnHidden nav-link" data-target = "setting"><i class="fa-solid fa-gear pr-4"></i>Setting</a>
-            </li>
-            
             <li class="p-3 pl-7 hover:bg-[#1b263b] hover:rounded-2xl   hover:text-red-500 active:bg-[#415a77]">
               <div class="hidden">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
               </div>
-              <a href="" class="block btnHidden"><i class="fa-solid fa-arrow-right-from-bracket pr-4"></i>Logout</a>
+              <a href="http://127.0.0.1:5500/frontend/pages/login.page.html" onclick="logout()" class="block btnHidden"><i class="fa-solid fa-arrow-right-from-bracket pr-4"></i>Logout</a>
             </li>
 
           </ul>
@@ -92,3 +85,26 @@ navBar.innerHTML = `
       </nav>
 `
 
+
+
+async function logout() {
+  try {
+    const response = await fetch('http://localhost:8000/api/logout', {
+      method: 'POST',
+      credentials: 'include', // important to send cookies
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ role: 'teacher' }) // or 'admin', 'student'
+    });
+
+    const data = await response.json();
+    console.log(data.message);
+
+    alert(data.message);
+    // Redirect to login page
+    // window.location.href = 'http://127.0.0.1:5500/frontend/pages/login.page.html';
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+}
