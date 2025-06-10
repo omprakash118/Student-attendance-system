@@ -239,6 +239,7 @@
               class="form-input icon-input w-full rounded border border-gray-700 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-[#415a77] focus:outline-none" />
           </div>
 
+          
           <!-- User Type -->
           <div class="form-group">
             <span class="form-icon"><i class="fas fa-user-tag"></i></span>
@@ -252,7 +253,7 @@
           </div>
 
           <!-- Captcha -->
-          <div class="flex space-x-3">
+          <!-- <div class="flex space-x-3">
             <div class="captcha-container flex w-1/3 items-center justify-center rounded px-4 py-3">
               <span class="font-medium text-[#415a77]">997087</span>
             </div>
@@ -261,6 +262,32 @@
               <input type="text" id="captcha" name="captcha" placeholder="Enter Captcha" required
                 class="form-input icon-input w-full rounded border border-gray-700 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-[#415a77] focus:outline-none" />
             </div>
+          </div> -->
+          <!-- Captcha -->
+         
+            <!-- <div class="captcha-container flex w-1/3 items-center justify-center rounded px-4 py-3">
+              <span class="font-medium text-[#415a77]">997087</span>
+            </div>
+            <div class="w-2/3 relative">
+              <span class="form-icon"><i class="fas fa-shield-alt"></i></span>
+              <input type="text" id="captcha" name="captcha" placeholder="Enter Captcha" required
+                class="form-input icon-input w-full rounded border border-gray-700 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-[#415a77] focus:outline-none" />
+            </div> -->
+
+<div class="flex justify-center items-center">
+
+  <div class="captcha-container  items-center justify-center rounded px-4 py-3 w-[80%]">
+    <p id="captchaQuestion" class="font-medium text-[#415a77]"></p>
+  </div>
+
+   
+            <div class="w-2/3 relative">
+              <span class="form-icon"><i class="fas fa-shield-alt"></i></span>
+              <input type="number" id="captcha" name="captchaAnswer" placeholder="Enter Captcha" required
+              class="form-input icon-input w-full rounded border border-gray-700 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-[#415a77] focus:outline-none" />
+            </div>
+            <input type="hidden" id="captchaExpected" name="captchaExpected" />
+            
           </div>
 
           <!-- Buttons -->
@@ -292,12 +319,22 @@
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const role = document.getElementById('userType').value;
-      const captcha = document.getElementById('captcha').value;
+      // const captcha = document.getElementById('captcha').value;
 
-      if (captcha !== '997087') {
-        alert('Invalid captcha!');
+      // if (captcha !== '997087') {
+      //   alert('Invalid captcha!');
+      //   return;
+      // }
+
+      const userCaptchaAnswer = parseInt(document.getElementById('captcha').value, 10);
+      const expectedCaptcha = parseInt(document.getElementById('captchaExpected').value, 10);
+
+      if (userCaptchaAnswer !== expectedCaptcha) {
+        alert('Invalid captcha answer! Please try again.');
+        generateCaptcha(); // regenerate captcha
         return;
       }
+
 
       try {
         const res = await fetch('http://localhost:8000/api/user/login', {
@@ -320,12 +357,6 @@
           localStorage.setItem('userRole', data.data.userRole);
           localStorage.setItem("userName", data.data.user.Firstname + " " + data.data.user.Lastname);
 
-          // console.log("User role:", data.data.userRole); // Check user role
-          // console.log("User ID:", data.data.userId); // Check user ID
-          //✅ Correct
-          // console.log("Login response:", data); // Check full data
-          // console.log("Storing userId:", data.data.userId); // Ensure userId exists
-
           if (role === 'teacher') {
             localStorage.setItem('teacher', JSON.stringify(data.data));
           }
@@ -346,6 +377,22 @@
         alert('Server error. Please try again.');
       }
     });
+  </script>
+
+  <script>
+    // In your HTML page script
+  function generateCaptcha() {
+  const num1 = Math.floor(Math.random() * 10) + 1;
+  const num2 = Math.floor(Math.random() * 10) + 1;
+  const question = `${num1} + ${num2} = ?`;
+  const expected = num1 + num2;
+
+  document.getElementById('captchaQuestion').textContent = question;
+  document.getElementById('captchaExpected').value = expected;
+}
+
+// Call the function to generate a captcha when the page loads
+window.onload = generateCaptcha;
   </script>
 </body>
 

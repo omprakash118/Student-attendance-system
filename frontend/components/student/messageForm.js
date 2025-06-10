@@ -21,8 +21,12 @@ formShell.innerHTML = `
   <div class="flex justify-center items-start min-h-[100vh] mx-4 h-auto m-6 text-[#1b263b]">
     <div class="w-full max-w-2xl p-6 rounded-2xl">
       <div class="rounded-lg bg-gray-200 p-6 shadow-lg">
-        <h2 class="mb-4 rounded-lg bg-[#415a77] p-4 text-xl font-semibold text-[#e0e1dd]">Send Message</h2>
-
+         <h2 class="mb-4 rounded-lg bg-[#415a77] p-4 text-xl font-semibold text-[#e0e1dd] flex items-center justify-between">
+          <span> Send Message  </span>
+          <button id="closeMessageForm" class="float-right h-10 w-10  bg-[#e0e1dd] p-1  hover:text-[#e0e1dd] active:bg-[#8e9baa] hover:bg-[#658cb8] rounded-lg shadow-md  text-[#415a77] transition cursor-pointer  nav-link" data-target="message">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </h2>
         <form id="sendMessageForm" class="space-y-4">
           <!-- Recipient ROLE -->
           <div>

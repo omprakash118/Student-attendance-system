@@ -5,15 +5,6 @@ myHeader.innerHTML = `
         <button id="sidebarToggle" class="cursor-pointer  bg-[#e0e1dd] hover:bg-[#415a77] text-[#415a77] hover:text-[#e0e1dd] p-1.5 pl-2.5 pr-2.5  rounded-[8px] w-[2.2rem] mr-5">
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
-
-        <form action="#">
-            <div class="border rounded-[8px] bg-[#e0e1dd] flex text-[#415a77]  border-none ">
-              <input type="text" placeholder="search" class="pl-5 pt-1.5 pb-1.5 w-[14rem] hover:text-[#415a77] text-[#415a77] font-bold text-xl " >
-              <span class = "flex justify-center items-center">
-                <i class="fa-solid fa-magnifying-glass pr-2 cursor-pointer"></i>
-              </span>
-            </div>
-        </form>
       </div>
 
 
@@ -34,9 +25,9 @@ myHeader.innerHTML = `
         <li>
           <a href="#" class="block  p-3.5 text-xl  hover:bg-gray-300 rounded-md nav-link" data-target = "profile">Profile</a>
         </li>
-        <li>
+        <!-- <li>
           <a href="#" class="block  p-3.5 text-xl  hover:bg-gray-300 rounded-md nav-link" data-target = "setting">Settings</a>
-        </li>
+        </li> -->
         <li>
           <a href="#" class="block  p-3.5 text-xl text-red-600 hover:bg-gray-300 rounded-md">Log Out</a>
         </li>
@@ -90,3 +81,14 @@ function closeDropdown() {
 
     arrowIcon.classList.remove("-rotate-90");
 }
+
+
+
+// <form action="#">
+//             <div class="border rounded-[8px] bg-[#e0e1dd] flex text-[#415a77]  border-none ">
+//               <input type="text" placeholder="search" class="pl-5 pt-1.5 pb-1.5 w-[14rem] hover:text-[#415a77] text-[#415a77] font-bold text-xl " >
+//               <span class = "flex justify-center items-center">
+//                 <i class="fa-solid fa-magnifying-glass pr-2 cursor-pointer"></i>
+//               </span>
+//             </div>
+//         </form>

@@ -14,10 +14,6 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
         }
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        // console.log("decodedToken : ", decodedToken);
-        // console.log("req.cookies : ", req.cookies);
-        // console.log("req.header : ", req.header("Authorization"));
-        // console.log('req.cookies.accessToken : ', decodedToken.role);
         let Model;
         if (decodedToken.role === "admin") Model = Admin;
         else if (decodedToken.role === "teacher") Model = Teacher;

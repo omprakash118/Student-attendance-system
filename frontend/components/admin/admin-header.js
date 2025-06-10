@@ -6,14 +6,7 @@ myHeader.innerHTML = `
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
 
-        <form action="#">
-            <div class="border rounded-[8px] bg-[#e0e1dd] flex text-[#415a77]  border-none ">
-              <input type="text" placeholder="search" class="pl-5 pt-1.5 pb-1.5 w-[14rem] hover:text-[#415a77] text-[#415a77] font-bold text-xl " >
-              <span class = "flex justify-center items-center">
-                <i class="fa-solid fa-magnifying-glass pr-2 cursor-pointer"></i>
-              </span>
-            </div>
-        </form>
+        
       </div>
 
 
