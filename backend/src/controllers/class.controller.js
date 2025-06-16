@@ -38,7 +38,6 @@ const createClass = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(201, newClass, "Class created successfully"));
 });
 
-
 // Get all classes
 const getAllClasses = asyncHandler(async (req, res) => {
     const classes = await Classes.find()
@@ -66,7 +65,6 @@ const getClassById = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, classDetails, "Class fetched successfully"));
 });
-
 
 // Add student to class
 const addStudentToClass = asyncHandler(async (req, res) => {
@@ -107,7 +105,6 @@ const addStudentToClass = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, updatedClass, "Student added to class successfully"));
 });
 
-
 // Remove student from class
 const removeStudentFromClass = asyncHandler(async (req, res) => {
     const { classId, studentId } = req.body;
@@ -131,7 +128,6 @@ const removeStudentFromClass = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, updatedClass, "Student removed from class successfully"));
 });
-
 
 // Update class details
 const updateClassDetails = asyncHandler(async (req, res) => {
@@ -179,7 +175,6 @@ const updateClassDetails = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, updatedClass, "Class updated successfully"));
 });
-
 
 // Delete class
 const deleteClass = asyncHandler(async (req, res) => {

@@ -4,44 +4,6 @@ const Student = require("../models/student.models.js");
 const Teacher = require("../models/teacher.models.js");
 
 // It is use to send message to students, class-students and teacher
-// async function sendMessage(req, res) {
-//     try {
-//         const { recipientType, studentName, teacherName, subject, messageBody } = req.body;
-
-//         // Validation
-//         if (!recipientType || !subject || !messageBody) {
-//           return res.status(400).json({ message: 'Required fields are missing.' });
-//         }
-
-//         if (
-//           (recipientType === 'students' || recipientType === 'class-students') &&
-//           !studentName
-//         ) {
-//           return res.status(400).json({ message: 'Student name is required.' });
-//         }
-
-//         if (recipientType === 'teacher' && !teacherName) {
-//           return res.status(400).json({ message: 'Teacher name is required.' });
-//         }
-
-//         const message = new Message({
-//           recipientType,
-//           studentName,
-//           teacherName,
-//           subject,
-//           messageBody
-//         });
-
-//         await message.save();
-
-//         res.status(201).json({ message: 'Message sent successfully.', data: message });
-//   } catch (err) {
-//     console.error('Error sending message:', err);
-//     res.status(500).json({ message: 'Server error.' });
-//   }
-// }; 
-
-
 async function sendMessage(req, res) {
   try {
     const {
@@ -85,16 +47,6 @@ async function sendMessage(req, res) {
 
 
 // It is use to get all messages
-// async function getAllMessages(req, res) {
-//   try {
-//     const messages = await Message.find().sort({ sentAt: -1 }); // Newest first
-//     res.status(200).json({ count: messages.length, data: messages });
-//   } catch (err) {
-//     console.error('Error fetching messages:', err);
-//     res.status(500).json({ message: 'Server error.' });
-//   }
-// }
-
 async function getAllMessages(req, res) {
   try {
     const { userId, role } = req.query;

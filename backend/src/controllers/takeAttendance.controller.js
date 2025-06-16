@@ -3,48 +3,6 @@ const ApiError = require("../utils/ApiError.js");
 const ApiResponse = require("../utils/ApiResponse.js");
 const Attendance = require("../models/attendance.model.js");
 
-
-// Controller to take attendance
-
-
-// const takeAttendance = asyncHandler(async (req, res) => {
-//   const { classId, subjectId, teacherId, date, attendanceData } = req.body;
-
-//   if (!classId || !subjectId || !teacherId || !date || !attendanceData || !Array.isArray(attendanceData)) {
-//     throw new ApiError(400, "All fields (classId, subjectId, teacherId, date, attendanceData[]) are required");
-//   }
-
-//   const existing = await Attendance.findOne({ classId, subjectId, date });
-//   if (existing) {
-//     throw new ApiError(409, "Attendance already taken for this class, subject, and date");
-//   }
-
-//   const classExists = await Class.findById(classId);
-//   if (!classExists) throw new ApiError(404, "Class not found");
-
-//   const teacherExists = await Teacher.findById(teacherId);
-//   if (!teacherExists) throw new ApiError(404, "Teacher not found");
-
-//   const studentIds = attendanceData.map(item => item.studentId);
-//   const studentsExist = await Student.find({ '_id': { $in: studentIds } });
-//   if (studentsExist.length !== studentIds.length) {
-//     throw new ApiError(404, "Some students not found");
-//   }
-
-//   const newAttendance = new Attendance({
-//     classId,
-//     subjectId,
-//     teacherId,
-//     date,
-//     attendanceData,
-//   });
-
-//   await newAttendance.save();
-
-//   return res.status(201).json(new ApiResponse(200, "Attendance taken successfully"));
-// });
-
-
 // POST /api/attendance/take-attendance
 const takeAttendance = async (req, res) => {
   try {
@@ -86,7 +44,6 @@ const takeAttendance = async (req, res) => {
   }
 };
 
-
 // Controller to get all attendance records
 const getAllClasses = asyncHandler(async (req, res) => {
   console.log("Fetching all attendance records...");
@@ -99,7 +56,6 @@ const getAllClasses = asyncHandler(async (req, res) => {
   console.log(attendance);
   return res.status(200).json(new ApiResponse(200, attendance, "Attendance fetched successfully"));
 });
-
 
 // Controller to get attendance by ID
 const getAttendanceById = asyncHandler(async (req, res) => {
@@ -120,6 +76,42 @@ const getAttendanceById = asyncHandler(async (req, res) => {
     new ApiResponse(200, attendance, "Attendance record fetched successfully")
   );
 });
+
+const getAttendanceByClassSubjectTeacherDate = asyncHandler(async (req, res) => {
+  const { classId, subjectId, teacherId, date } = req.query;
+
+  if (!classId || !subjectId || !teacherId || !date) {
+    throw new ApiError(400, "classId, subjectId, teacherId, and date are required");
+  }
+
+  const attendance = await Attendance.findOne({
+    classId,
+    teacherId,
+    date: {
+      $gte: new Date(date),
+      $lt: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000),
+    }
+  })
+    .populate('classId', 'className')
+    .populate('teacherId', 'Firstname Lastname')
+    .populate('attendanceData.studentId', 'Firstname Lastname');
+
+
+  if (!attendance) {
+    return res.status(200).json(new ApiResponse(200, null, "No attendance found"));
+  }
+
+  return res.status(200).json(new ApiResponse(200, attendance, "Attendance found"));
+});
+
+// Exporting the controllers
+module.exports = {
+  takeAttendance,
+  getAllClasses,
+  getAttendanceById,
+  getAttendanceByClassSubjectTeacherDate
+};
+
 
 // const getAttendanceByClassAndDate = asyncHandler(async (req, res) => {
 //   const { classId, date } = req.query;
@@ -173,39 +165,43 @@ const getAttendanceById = asyncHandler(async (req, res) => {
 //   return res.status(200).json(new ApiResponse(200, attendance, "Attendance found"));
 // });
 
-const getAttendanceByClassSubjectTeacherDate = asyncHandler(async (req, res) => {
-  const { classId, subjectId, teacherId, date } = req.query;
 
-  if (!classId || !subjectId || !teacherId || !date) {
-    throw new ApiError(400, "classId, subjectId, teacherId, and date are required");
-  }
-
-  const attendance = await Attendance.findOne({
-    classId,
-    teacherId,
-    date: {
-      $gte: new Date(date),
-      $lt: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000),
-    }
-  })
-    .populate('classId', 'className')
-    .populate('teacherId', 'Firstname Lastname')
-    .populate('attendanceData.studentId', 'Firstname Lastname');
+// Controller to take attendance
 
 
-  if (!attendance) {
-    return res.status(200).json(new ApiResponse(200, null, "No attendance found"));
-  }
+// const takeAttendance = asyncHandler(async (req, res) => {
+//   const { classId, subjectId, teacherId, date, attendanceData } = req.body;
 
-  return res.status(200).json(new ApiResponse(200, attendance, "Attendance found"));
-});
+//   if (!classId || !subjectId || !teacherId || !date || !attendanceData || !Array.isArray(attendanceData)) {
+//     throw new ApiError(400, "All fields (classId, subjectId, teacherId, date, attendanceData[]) are required");
+//   }
 
+//   const existing = await Attendance.findOne({ classId, subjectId, date });
+//   if (existing) {
+//     throw new ApiError(409, "Attendance already taken for this class, subject, and date");
+//   }
 
+//   const classExists = await Class.findById(classId);
+//   if (!classExists) throw new ApiError(404, "Class not found");
 
-// Exporting the controllers
-module.exports = {
-  takeAttendance,
-  getAllClasses,
-  getAttendanceById,
-  getAttendanceByClassSubjectTeacherDate
-};
+//   const teacherExists = await Teacher.findById(teacherId);
+//   if (!teacherExists) throw new ApiError(404, "Teacher not found");
+
+//   const studentIds = attendanceData.map(item => item.studentId);
+//   const studentsExist = await Student.find({ '_id': { $in: studentIds } });
+//   if (studentsExist.length !== studentIds.length) {
+//     throw new ApiError(404, "Some students not found");
+//   }
+
+//   const newAttendance = new Attendance({
+//     classId,
+//     subjectId,
+//     teacherId,
+//     date,
+//     attendanceData,
+//   });
+
+//   await newAttendance.save();
+
+//   return res.status(201).json(new ApiResponse(200, "Attendance taken successfully"));
+// });

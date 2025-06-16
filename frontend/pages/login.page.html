@@ -319,23 +319,14 @@
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const role = document.getElementById('userType').value;
-      // const captcha = document.getElementById('captcha').value;
-
-      // if (captcha !== '997087') {
-      //   alert('Invalid captcha!');
-      //   return;
-      // }
-
       const userCaptchaAnswer = parseInt(document.getElementById('captcha').value, 10);
       const expectedCaptcha = parseInt(document.getElementById('captchaExpected').value, 10);
 
       if (userCaptchaAnswer !== expectedCaptcha) {
         alert('Invalid captcha answer! Please try again.');
-        generateCaptcha(); // regenerate captcha
+        generateCaptcha(); 
         return;
       }
-
-
       try {
         const res = await fetch('http://localhost:8000/api/user/login', {
           method: 'POST',
@@ -343,14 +334,10 @@
           credentials: 'include',
           body: JSON.stringify({ email, username, password, role })
         });
-
         const data = await res.json();
         console.log("login data", data);
-
-
         if (res.ok) {
           alert(data.message || 'Login successful!');
-
           console.log('First Name:', data.data.user.Firstname); // Check first name
           // Store userId in localStorage
           localStorage.setItem('userId', data.data.userId);

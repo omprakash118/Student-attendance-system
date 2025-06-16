@@ -56,9 +56,4 @@ app.get('/student', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/pages/student.page.html'));
 });
 
-
-// app.get('/', (req, res) => {
-//   res.send('Hello World!');
-// });
-
 module.exports = { app };
