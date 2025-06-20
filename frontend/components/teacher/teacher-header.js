@@ -25,12 +25,10 @@ myHeader.innerHTML = `
         <li>
           <a href="#" class="block  p-3.5 text-xl  hover:bg-gray-300 rounded-md nav-link" data-target = "profile">Profile</a>
         </li>
-        <!-- <li>
-          <a href="#" class="block  p-3.5 text-xl  hover:bg-gray-300 rounded-md nav-link" data-target = "setting">Settings</a>
-        </li> -->
         <li>
-          <a href="#" class="block  p-3.5 text-xl text-red-600 hover:bg-gray-300 rounded-md">Log Out</a>
-        </li>
+          <a href="#" class="block  p-3.5 text-xl  hover:bg-gray-300 rounded-md nav-link" data-target = "setting">Settings</a>
+        </li> 
+
       </ul>
     </div>
 </div>
