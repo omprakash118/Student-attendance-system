@@ -70,7 +70,7 @@ async function fetchTeachers() {
  
     renderTeacherList(currentPage);
     renderPagination();
-    setupTeacherSearch();
+    setupTeacherSearchTeacher();
   
 
   }catch(err){
@@ -290,7 +290,7 @@ function pageBtnStyle(active = false) {
 }
 
 
-function setupTeacherSearch() {
+function setupTeacherSearchTeacher() {
   const searchInputTD = document.querySelector('.teacherSearchSetup');
   const rowsTD = document.querySelectorAll('.teacherTable tbody tr');
 

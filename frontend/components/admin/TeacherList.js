@@ -31,7 +31,7 @@ const originalTeacherList = `
   </table>
   <div class="mt-4 flex items-center justify-between">
     <p class="text-[#8e9baa]" id="totalTeacher"></p>
-    <div class="flex space-x-2" id="pagination">
+    <div class="flex space-x-2" id="paginationTeacher">
       
     </div>
   </div>
@@ -72,7 +72,7 @@ async function fetchTeachers() {
     document.getElementById("totalTeacher").innerHTML = `Total Teachers: ${length}`; // Display the total number of teachers
  
     renderTeacherList(currentPage);
-    renderPagination();
+    renderPaginationTeacher();
     setupTeacherSearch();
   
 
@@ -121,6 +121,10 @@ async function showTeacherdetails(teacherId){
           <div>
             <label class="mb-2 block  text-gray-700" for="email">Email</label>
             <input type="email" id="emailD" value='${teacher.email}' placeholder="josprajapat@gmail.com" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
+          </div>
+          <div>
+            <label class="mb-2 block  text-gray-700" for="subject">Subjects</label>
+            <input type="text" id="emailD" value='${teacher.subjects}' class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-[#415a77] focus:outline-none" / disabled>
           </div>
           <div>
             <label class="mb-2 block   text-gray-700" for="mobilePhone">Mobile Phone</label>
@@ -313,8 +317,8 @@ function renderTeacherList(page) {
 }
 
 
-function renderPagination() {
-  const pagination = document.getElementById("pagination");
+function renderPaginationTeacher() {
+  const pagination = document.getElementById("paginationTeacher");
   pagination.innerHTML = "";
 
   const totalPages = Math.ceil(allTeachers.length / itemsPerPage);
@@ -323,11 +327,11 @@ function renderPagination() {
   const prevBtn = document.createElement("button");
   prevBtn.innerText = "Prev";
   prevBtn.disabled = currentPage === 1;
-  prevBtn.className = pageBtnStyle();
+  prevBtn.className = pageBtnStyleTeacher();
   prevBtn.onclick = () => {
     currentPage--;
     renderTeacherList(currentPage);
-    renderPagination();
+    renderPaginationTeacher();
   };
   pagination.appendChild(prevBtn);
 
@@ -335,11 +339,11 @@ function renderPagination() {
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.innerText = i;
-    btn.className = pageBtnStyle(i === currentPage);
+    btn.className = pageBtnStyleTeacher(i === currentPage);
     btn.onclick = () => {
       currentPage = i;
       renderTeacherList(currentPage);
-      renderPagination();
+      renderPaginationTeacher();
     };
     pagination.appendChild(btn);
   }
@@ -348,17 +352,17 @@ function renderPagination() {
   const nextBtn = document.createElement("button");
   nextBtn.innerText = "Next";
   nextBtn.disabled = currentPage === totalPages;
-  nextBtn.className = pageBtnStyle();
+  nextBtn.className = pageBtnStyleTeacher();
   nextBtn.onclick = () => {
     currentPage++;
     renderTeacherList(currentPage);
-    renderPagination();
+    renderPaginationTeacher();
   };
   pagination.appendChild(nextBtn);
 }
 
 
-function pageBtnStyle(active = false) {
+function pageBtnStyleTeacher(active = false) {
   return `
     px-3 py-1 rounded-md border border-[#415a77] text-sm font-medium transition-all duration-200 
     ${active ? 'bg-[#415a77] text-white' : 'bg-white text-[#415a77] hover:bg-gray-200'}
